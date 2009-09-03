@@ -54,6 +54,11 @@ public class HeapFibonacciNoh<T>{
      */
     private int grau;
 
+    //Valores para o graphViz
+    private static int uid = 0;
+    private int pk;
+
+
 
     public  HeapFibonacciNoh(T info, double chave)
     {
@@ -63,6 +68,7 @@ public class HeapFibonacciNoh<T>{
         esquerdo = this;
         grau = 0;
         marcado = false;
+        pk= uid++;
     }
 
     
@@ -146,6 +152,16 @@ public class HeapFibonacciNoh<T>{
 	}
 
 
+	public int getPk() {
+		return pk;
+	}
+
+
+	public void setPk(int pk) {
+		this.pk = pk;
+	}
+
+
 	public String toString()
     {
             StringBuffer buf = new StringBuffer();
@@ -188,6 +204,16 @@ public class HeapFibonacciNoh<T>{
             buf.append(']');
 
             return buf.toString();
+    }
+	
+    public String toGraphViz(){
+        String returnString = "";
+        returnString += pk + " [";
+
+        returnString += "label= \"" + this.chave + "\"];";
+
+
+        return returnString;
     }
 
 
