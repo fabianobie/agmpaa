@@ -300,7 +300,7 @@ public class HeapFibonacci<T> {
 	                //System.out.println(heap.toGraphViz());
 	        }
 
-	                heap.consolidar();
+	               // heap.consolidar();
 	                
 	                //System.out.println(heap.toGraphViz());
 	                //ArrayList<String> dot = new ArrayList<String>();
