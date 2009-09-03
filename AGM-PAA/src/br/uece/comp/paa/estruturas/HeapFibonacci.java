@@ -294,7 +294,7 @@ public class HeapFibonacci<T> {
 	        HeapFibonacci<Integer> heap = new HeapFibonacci<Integer>();
 
 	        Random generator = new Random(12823423);
-	        for(int i = 0; i < 1000; i++){
+	        for(int i = 0; i < 100; i++){
 	                int temp = generator.nextInt(50000);
 	                heap.inserir(new Integer(temp), temp);
 	                //System.out.println(heap.toGraphViz());
@@ -310,7 +310,7 @@ public class HeapFibonacci<T> {
 	                //}
 
 
-	        System.out.println("Acabou !");
+	        System.out.println(heap.toGraphViz());
 
 	    }
 
@@ -320,7 +320,7 @@ public class HeapFibonacci<T> {
 	   	 * Modelo baseado de codigo modelado no Site do GraphViz
 	   	 * @return
 	   	 */
-/*	    public String toGraphViz(){
+    public String toGraphViz(){
 	        if (this.minNoh == null) {
 	            return "FibonacciHeap=[]";
 	        }
@@ -345,66 +345,66 @@ public class HeapFibonacci<T> {
 	                buf.append("{ rank = same; ");
 	                while(!rank.contains(tempRankCurr)){
 	                        rank.add(tempRankCurr);
-	                        buf.append(tempRankCurr.getPK() + "; ");
-	                        tempRankCurr = tempRankCurr.getRight();
+	                        buf.append(tempRankCurr.getPai() + "; ");
+	                        tempRankCurr = tempRankCurr.getDireito();
 
 	                }
 	                buf.append("}\n");
 	                buf.append(curr.toGraphViz() + "\n");
 
-	                if(curr.getParent() != null && curr.getParent() != curr && !list.contains(curr.getParent())){
-	                        buf.append(curr.getPK() + " -> " + curr.getParent().getPK() + ";\n");
-	                        buf.append(curr.getParent().getPK() + " -> " + curr.getPK() + ";\n");
+	                if(curr.getPai() != null && curr.getPai() != curr && !list.contains(curr.getPai())){
+	                        buf.append(curr.getPk() + " -> " + curr.getPai().getPk() + ";\n");
+	                        buf.append(curr.getPai().getPk() + " -> " + curr.getPk() + ";\n");
 	                }
-	                if(curr.getRight() != null && curr.getRight() != curr && !list.contains(curr.getRight())){
-	                        buf.append(curr.getPK() + " -> " + curr.getRight().getPK() + ";\n");
-	                        buf.append(curr.getRight().getPK() + " -> " + curr.getPK() + ";\n");
+	                if(curr.getDireito() != null && curr.getDireito() != curr && !list.contains(curr.getDireito())){
+	                        buf.append(curr.getPk() + " -> " + curr.getDireito().getPk() + ";\n");
+	                        buf.append(curr.getDireito().getPk() + " -> " + curr.getPk() + ";\n");
 	                }
-	                if(curr.getLeft() != null && curr.getLeft() != curr && curr.getLeft() != curr.getRight() && !list.contains(curr.getLeft())){
-	                        buf.append(curr.getPK() + " -> " + curr.getLeft().getPK() + ";\n");
-	                        buf.append(curr.getLeft().getPK() + " -> " + curr.getPK() + ";\n");
+	                if(curr.getEsquerdo() != null && curr.getEsquerdo() != curr && curr.getEsquerdo() != curr.getDireito() && !list.contains(curr.getEsquerdo())){
+	                        buf.append(curr.getPk() + " -> " + curr.getEsquerdo().getPk() + ";\n");
+	                        buf.append(curr.getEsquerdo().getPk() + " -> " + curr.getPk() + ";\n");
 	                }
-	                if(curr.getChild() != null && curr.getChild() != curr && !list.contains(curr.getChild())){
-	                        buf.append(curr.getPK() + " -> " + curr.getChild().getPK() + ";\n");
-	                        buf.append(curr.getChild().getPK() + " -> " + curr.getPK() + ";\n");
+	                if(curr.getFilho() != null && curr.getFilho() != curr && !list.contains(curr.getFilho())){
+	                        buf.append(curr.getPk() + " -> " + curr.getFilho().getPk() + ";\n");
+	                        buf.append(curr.getFilho().getPk() + " -> " + curr.getPk() + ";\n");
 	                }
 	            }
 
-	            if (curr.getChild() != null) {
-	                stack.push(curr.getChild());
+	            if (curr.getFilho() != null) {
+	                stack.push(curr.getFilho());
 	            }
 
 	            HeapFibonacciNoh<T> start = curr;
-	            curr = curr.getRight();
+	            curr = curr.getDireito();
 
 	            while (curr != start) {
 	                if(!list.contains(curr)){
 	                        list.add(curr);
 	                        buf.append(curr.toGraphViz() + "\n");
 
-	                    if(curr.getParent() != null && curr.getParent() != curr && !list.contains(curr.getParent())){
-	                        buf.append(curr.getPK() + " -> " + curr.getParent().getPK() + ";\n");
-	                        buf.append(curr.getParent().getPK() + " -> " + curr.getPK() + ";\n");
+	                    if(curr.getPai() != null && curr.getPai() != curr && !list.contains(curr.getPai())){
+	                        buf.append(curr.getPk() + " -> " + curr.getPai().getPk() + ";\n");
+	                        buf.append(curr.getPai().getPk() + " -> " + curr.getPk() + ";\n");
 	                    }
-	                    if(curr.getRight() != null && curr.getRight() != curr && !list.contains(curr.getRight())){
-	                        buf.append(curr.getPK() + " -> " + curr.getRight().getPK() + ";\n");
-	                        buf.append(curr.getRight().getPK() + " -> " + curr.getPK() + ";\n");
+	                    if(curr.getDireito() != null && curr.getDireito() != curr && !list.contains(curr.getDireito())){
+	                        buf.append(curr.getPk() + " -> " + curr.getDireito().getPk() + ";\n");
+	                        buf.append(curr.getDireito().getPk() + " -> " + curr.getPk() + ";\n");
 	                    }
-	                    if(curr.getLeft() != null && curr.getLeft() != curr && curr.getLeft() != curr.getRight() && !list.contains(curr.getLeft())){
-	                        buf.append(curr.getPK() + " -> " + curr.getLeft().getPK() + ";\n");
-	                        buf.append(curr.getLeft().getPK() + " -> " + curr.getPK() + ";\n");
+	                    if(curr.getEsquerdo() != null && curr.getEsquerdo() != curr && curr.getEsquerdo() != curr.getDireito() && !list.contains(curr.getEsquerdo())){
+	                        buf.append(curr.getPk() + " -> " + curr.getEsquerdo().getPk() + ";\n");
+	                        buf.append(curr.getEsquerdo().getPk() + " -> " + curr.getPk() + ";\n");
 	                    }
-	                    if(curr.getChild() != null && curr.getChild() != curr && !list.contains(curr.getChild())){
-	                        buf.append(curr.getPK() + " -> " + curr.getChild().getPK() + ";\n");
-	                        buf.append(curr.getChild().getPK() + " -> " + curr.getPK() + ";\n");
+	                    if(curr.getFilho() != null && curr.getFilho() != curr && !list.contains(curr.getFilho())){
+	                        buf.append(curr.getPk() + " -> " + curr.getFilho().getPk() + ";\n");
+	                        buf.append(curr.getFilho().getPk() + " -> " + curr.getPk() + ";\n");
 	                    }
 	                }
 
-	                if (curr.getChild() != null) {
-	                    stack.push(curr.getChild());
+	                if (curr.getFilho() != null) {
+	                    stack.push(curr.getFilho());
 	                }
 
-	                curr = curr.getRight();
+	                curr = curr.getDireito();
 	            }
 	        }
 
@@ -412,9 +412,6 @@ public class HeapFibonacci<T> {
 
 	        return buf.toString();
 	    }
-	}
-*/
-	
 	
 	
 }
