@@ -62,6 +62,7 @@ public class HeapFibonacciNoh<T>{
         direito = this;
         esquerdo = this;
         grau = 0;
+        marcado = false;
     }
 
     
