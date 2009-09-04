@@ -8,7 +8,6 @@
 package br.uece.comp.paa.estruturas;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -176,11 +175,13 @@ public class HeapFibonacci<T> {
 		//limpeza e reconstrução da lista
 		for (int i = 0; i < arrTam; i++){
 			HeapFibonacciNoh<T> nohAux  = arrGraus.get(i); 
-			if (arrGraus.get(i) != null){
+			if (nohAux != null){
 				if (this.minNoh != null){
 					//removemos o noh da lista
-					nohAux.setEsquerdo(nohAux);
-					nohAux.setDireito(nohAux);
+					 // First remove node from root list.
+					nohAux.getEsquerdo().setDireito(nohAux.getDireito());
+					nohAux.getDireito().setEsquerdo(nohAux.getEsquerdo());
+					
 					colocar(nohAux);
 				} else {
 					this.minNoh = nohAux;
@@ -202,7 +203,7 @@ public class HeapFibonacci<T> {
 		if (noh.getFilho() == null) {
 			noh.setFilho(outroNoh);
 			outroNoh.setDireito(outroNoh);
-			outroNoh.setDireito(outroNoh);
+			outroNoh.setEsquerdo(outroNoh);
 		} else {
 			outroNoh.setEsquerdo(noh.getFilho());
 			outroNoh.setDireito(noh.getFilho().getDireito());
@@ -285,133 +286,81 @@ public class HeapFibonacci<T> {
 	            }
 	        }
 	}
-	
+	   
+    public String toString()
+    {
+        if (this.minNoh == null) {
+            return "FibonacciHeap=[]";
+        }
+
+        // cria uma pilha e coloca a raiz
+        Stack<HeapFibonacciNoh<T>> stack = new Stack<HeapFibonacciNoh<T>>();
+        stack.push(this.minNoh);
+
+        StringBuffer buf = new StringBuffer(512);
+        buf.append("FibonacciHeap=[");
+
+        //
+        while (!stack.empty()) {
+        	HeapFibonacciNoh<T> curr = stack.pop();
+            if(curr.getChave() == Double.MAX_VALUE){
+                        buf.append("+Inf");
+                }else{
+                        buf.append(curr);
+                }
+            buf.append(", ");
+
+            if (curr.getFilho() != null) {
+                stack.push(curr.getFilho());
+                buf.append("\n");
+            }
+
+            HeapFibonacciNoh<T> start = curr;
+            curr = curr.getDireito();
+
+            while (curr != start) {
+                if(curr.getChave() == Double.MAX_VALUE){
+                        buf.append("+Inf");
+                }else{
+                        buf.append(curr);
+                }
+                buf.append(", ");
+
+                if (curr.getFilho() != null) {
+                    stack.push(curr.getFilho());
+                    buf.append("\n");
+                }
+
+                curr = curr.getDireito();
+            }
+
+        }
+
+        buf.append(']');
+
+        return buf.toString();
+    }
+
+    
 	/***
-	 * Teste
+	 * Teste Heap Fibonacci
 	 */
 	
 	   public static void main(String args[]){
 	        HeapFibonacci<Integer> heap = new HeapFibonacci<Integer>();
-
-	        Random generator = new Random(12823423);
-	        for(int i = 0; i < 100; i++){
-	                int temp = generator.nextInt(50000);
-	                heap.inserir(new Integer(temp), temp);
-	                //System.out.println(heap.toGraphViz());
-	        }
-
-	               // heap.consolidar();
-	                
-	                //System.out.println(heap.toGraphViz());
-	                //ArrayList<String> dot = new ArrayList<String>();
-	                //while(!heap.isEmpty()){
-	                  //      heap.removeMin();
-	                  //      dot.add(heap.toGraphViz());
-	                //}
-
-
-	        System.out.println(heap.toGraphViz());
-
+	        
+	        heap.inserir(10, 10);
+	        heap.inserir(20, 20);
+	        heap.inserir(5, 5);
+	        heap.inserir(50, 50);
+	        heap.inserir(25, 25);
+	        heap.extrairMin();
+	        heap.extrairMin();
+	        
+	        System.out.println(heap);
 	    }
 
 
-	   	/**
-	   	 * Gerar aquivo para o formato GraphViz
-	   	 * Modelo baseado de codigo modelado no Site do GraphViz
-	   	 * @return
-	   	 */
-    public String toGraphViz(){
-	        if (this.minNoh == null) {
-	            return "FibonacciHeap=[]";
-	        }
-
-	        // create a new stack and put root on it
-	        Stack<HeapFibonacciNoh<T>> stack = new Stack<HeapFibonacciNoh<T>>();
-	        stack.push(this.minNoh);
-	        ArrayList<HeapFibonacciNoh<T>> list = new ArrayList<HeapFibonacciNoh<T>>();
-	        ArrayList<HeapFibonacciNoh<T>> rank = new ArrayList<HeapFibonacciNoh<T>>();
-
-	        StringBuffer buf = new StringBuffer(512);
-	        buf.append("digraph G{\n");
-	        buf.append("ranksep=1.5;\n");
-
-	        // do a simple breadth-first traversal on the tree
-	        while (!stack.empty()) {
-	            HeapFibonacciNoh<T> curr = stack.pop();
-	            if(!list.contains(curr)){
-	                list.add(curr);
-
-	                HeapFibonacciNoh<T> tempRankCurr = curr;
-	                buf.append("{ rank = same; ");
-	                while(!rank.contains(tempRankCurr)){
-	                        rank.add(tempRankCurr);
-	                        buf.append(tempRankCurr.getPai() + "; ");
-	                        tempRankCurr = tempRankCurr.getDireito();
-
-	                }
-	                buf.append("}\n");
-	                buf.append(curr.toGraphViz() + "\n");
-
-	                if(curr.getPai() != null && curr.getPai() != curr && !list.contains(curr.getPai())){
-	                        buf.append(curr.getPk() + " -> " + curr.getPai().getPk() + ";\n");
-	                        buf.append(curr.getPai().getPk() + " -> " + curr.getPk() + ";\n");
-	                }
-	                if(curr.getDireito() != null && curr.getDireito() != curr && !list.contains(curr.getDireito())){
-	                        buf.append(curr.getPk() + " -> " + curr.getDireito().getPk() + ";\n");
-	                        buf.append(curr.getDireito().getPk() + " -> " + curr.getPk() + ";\n");
-	                }
-	                if(curr.getEsquerdo() != null && curr.getEsquerdo() != curr && curr.getEsquerdo() != curr.getDireito() && !list.contains(curr.getEsquerdo())){
-	                        buf.append(curr.getPk() + " -> " + curr.getEsquerdo().getPk() + ";\n");
-	                        buf.append(curr.getEsquerdo().getPk() + " -> " + curr.getPk() + ";\n");
-	                }
-	                if(curr.getFilho() != null && curr.getFilho() != curr && !list.contains(curr.getFilho())){
-	                        buf.append(curr.getPk() + " -> " + curr.getFilho().getPk() + ";\n");
-	                        buf.append(curr.getFilho().getPk() + " -> " + curr.getPk() + ";\n");
-	                }
-	            }
-
-	            if (curr.getFilho() != null) {
-	                stack.push(curr.getFilho());
-	            }
-
-	            HeapFibonacciNoh<T> start = curr;
-	            curr = curr.getDireito();
-
-	            while (curr != start) {
-	                if(!list.contains(curr)){
-	                        list.add(curr);
-	                        buf.append(curr.toGraphViz() + "\n");
-
-	                    if(curr.getPai() != null && curr.getPai() != curr && !list.contains(curr.getPai())){
-	                        buf.append(curr.getPk() + " -> " + curr.getPai().getPk() + ";\n");
-	                        buf.append(curr.getPai().getPk() + " -> " + curr.getPk() + ";\n");
-	                    }
-	                    if(curr.getDireito() != null && curr.getDireito() != curr && !list.contains(curr.getDireito())){
-	                        buf.append(curr.getPk() + " -> " + curr.getDireito().getPk() + ";\n");
-	                        buf.append(curr.getDireito().getPk() + " -> " + curr.getPk() + ";\n");
-	                    }
-	                    if(curr.getEsquerdo() != null && curr.getEsquerdo() != curr && curr.getEsquerdo() != curr.getDireito() && !list.contains(curr.getEsquerdo())){
-	                        buf.append(curr.getPk() + " -> " + curr.getEsquerdo().getPk() + ";\n");
-	                        buf.append(curr.getEsquerdo().getPk() + " -> " + curr.getPk() + ";\n");
-	                    }
-	                    if(curr.getFilho() != null && curr.getFilho() != curr && !list.contains(curr.getFilho())){
-	                        buf.append(curr.getPk() + " -> " + curr.getFilho().getPk() + ";\n");
-	                        buf.append(curr.getFilho().getPk() + " -> " + curr.getPk() + ";\n");
-	                    }
-	                }
-
-	                if (curr.getFilho() != null) {
-	                    stack.push(curr.getFilho());
-	                }
-
-	                curr = curr.getDireito();
-	            }
-	        }
-
-	        buf.append('}');
-
-	        return buf.toString();
-	    }
 	
 	
 }
