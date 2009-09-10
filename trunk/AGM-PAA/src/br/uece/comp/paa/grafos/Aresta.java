@@ -50,9 +50,9 @@ public class Aresta<T>{
 	public boolean equals(Object obj) {
 		if (obj instanceof Aresta)
 			return false;
-		Aresta<T> edg = (Aresta<T>) obj;if ((edg.getA().equals(edg.getA()) && edg.getB().equals(edg.getB()))
-				|| (edg.getB().equals(edg.getA()) && edg.getA().equals(
-						edg.getB())))
+		Aresta<T> edg = (Aresta<T>) obj;
+		if ((edg.getA().equals(A) && edg.getB().equals(B))
+				|| (edg.getB().equals(A) && edg.getA().equals(B)))
 			return true;
 		else
 			return false;
