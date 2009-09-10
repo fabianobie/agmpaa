@@ -19,7 +19,6 @@ public class Vertice<T>{
 	private Double chave;
 	private ArrayList<Aresta<T>> listAdj;
 	
-	
 	public T getInfo() {
 		return info;
 	}
@@ -41,6 +40,18 @@ public class Vertice<T>{
 	public void addAdj(Vertice<T> vrtx){
 		Aresta<T> edg = new Aresta<T>(this,vrtx);
 		listAdj.add(edg);
+	}
+	
+	@Override 
+	public boolean equals(Object obj) {
+		if (obj instanceof Vertice)
+			return false;
+		Vertice<T> vrtx = (Vertice<T>) obj;
+		
+		if (vrtx.getChave() == chave && vrtx.getInfo() == info)
+			return true;
+		else
+			return false;
 	}
 		
 }
