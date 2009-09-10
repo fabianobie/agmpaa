@@ -45,4 +45,19 @@ public class Aresta<T>{
 	public void setPeso(double peso) {
 		this.peso = peso;
 	}
+
+	@Override 
+	public boolean equals(Object obj) {
+		if (obj instanceof Aresta)
+			return false;
+		Aresta<T> edg = (Aresta<T>) obj;if ((edg.getA().equals(edg.getA()) && edg.getB().equals(edg.getB()))
+				|| (edg.getB().equals(edg.getA()) && edg.getA().equals(
+						edg.getB())))
+			return true;
+		else
+			return false;
+	}
+	
+	
+	
 }
