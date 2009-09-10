@@ -17,6 +17,11 @@ public class Grafo <T>{
 	
 	private ArrayList<Vertice<T>> vertices;
 	
+	public void addElem(Vertice<T> va, Vertice<T> vb){
+		Aresta<T> edg = new Aresta<T>(va, vb);
+		addElem(edg);
+	}
+	
 	public void addElem(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getA();
@@ -29,6 +34,8 @@ public class Grafo <T>{
 		if(!vertices.contains(b)) 
 			vertices.add(b);
 		
+		id = vertices.indexOf(b);
+		vertices.get(id).addAdj(a);
 	}
 
 	public ArrayList<Vertice<T>> getVertices() {
