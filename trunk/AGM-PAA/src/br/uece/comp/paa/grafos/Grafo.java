@@ -7,13 +7,30 @@
  */
 package br.uece.comp.paa.grafos;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+
+import org.jgraph.JGraph;
+import org.jgraph.graph.DefaultCellViewFactory;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
+import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.GraphLayoutCache;
+import org.jgraph.graph.GraphModel;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -109,6 +126,43 @@ public class Grafo <T>{
 
 		System.out.println(grf);
 		
+		
+		
+		GraphModel model = new DefaultGraphModel();
+		GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
+		JGraph graph = new JGraph(model, view);
+		
+		ArrayList<Vertice<String>> vrtx = grf.getVertices();
+		DefaultGraphCell[] cells = new DefaultGraphCell[vrtx.size()];
+		
+		for(int i=0; i< vrtx.size();i++){
+			cells[i] = new DefaultGraphCell(vrtx.get(i).getInfo());
+			GraphConstants.setBounds(cells[i].getAttributes(),new Rectangle2D.Double(20, 20, 40, 20));
+			GraphConstants.setGradientColor(cells[i].getAttributes(),Color.gray);
+			GraphConstants.setOpaque(cells[i].getAttributes(), true);
+			DefaultPort port = new DefaultPort();
+			cells[i].add(port);
+			
+		}
+		
+		
+		DefaultEdge edge = new DefaultEdge();
+		edge.setSource(cells[0].getChildAt(0));
+		edge.setTarget(cells[1].getChildAt(0));
+		//cells[2] = edge;
+		view.setAutoSizeOnValueChange(false);
+
+		int arrow = GraphConstants.ARROW_NONE;
+		GraphConstants.setLineEnd(edge.getAttributes(), arrow);
+		GraphConstants.setEndFill(edge.getAttributes(), true);
+		graph.getGraphLayoutCache().insert(edge);
+		graph.getGraphLayoutCache().insert(cells);
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(new JScrollPane(graph));
+		frame.pack();
+		frame.setVisible(true);
+		
+
 	}
 	
 }
