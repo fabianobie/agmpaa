@@ -77,6 +77,16 @@ public class Grafo <T>{
 	}
 	
 	
+	@Override
+	public String toString() {
+		String res = "Grafo\n\t[";
+		for (Vertice<T> V : vertices) {
+			res +="\n\t"+V.toString()+"\n";
+		}
+		res += " ]";
+		return res;
+	}
+
 	/*
 	 * Testando Grafos
 	 */
@@ -107,7 +117,7 @@ public class Grafo <T>{
 		grf.addElem(aresta1);
 		grf.addElem(aresta2);
 		*/
-		System.out.println("Fim !");
+		System.out.println(grf);
 		
 	}
 	
