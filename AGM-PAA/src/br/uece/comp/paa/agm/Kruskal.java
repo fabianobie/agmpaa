@@ -12,5 +12,9 @@ package br.uece.comp.paa.agm;
  *
  */
 public class Kruskal {
-
+	
+	public Kruskal(){
+		
+	}
+	
 }
