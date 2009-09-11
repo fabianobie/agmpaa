@@ -79,9 +79,9 @@ public class Grafo <T>{
 	
 	@Override
 	public String toString() {
-		String res = "Grafo\n\t[";
+		String res = "Grafo[\n";
 		for (Vertice<T> V : vertices) {
-			res +="\n\t"+V.toString()+"\n";
+			res +="\t"+V.toString()+"\n";
 		}
 		res += " ]";
 		return res;
@@ -106,17 +106,7 @@ public class Grafo <T>{
 			grf.addEdge(v1, v2, Double.parseDouble(peso));
 		}
 		
-		
-		
-		/*
-		Aresta<String>  aresta = new Aresta<String>(new Vertice<String>("Fabiano"),new Vertice<String>("tavares"),10.0);
-		Aresta<String>  aresta1 = new Aresta<String>(new Vertice<String>("Fabiano"),new Vertice<String>("silva"),15.0);
-		Aresta<String>  aresta2 = new Aresta<String>(new Vertice<String>("silva"),new Vertice<String>("tavares"),5.0);
-		
-		grf.addElem(aresta);
-		grf.addElem(aresta1);
-		grf.addElem(aresta2);
-		*/
+
 		System.out.println(grf);
 		
 	}
