@@ -7,6 +7,11 @@
  */
 package br.uece.comp.paa.grafos;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -75,22 +80,33 @@ public class Grafo <T>{
 	/*
 	 * Testando Grafos
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		Grafo<String> grf = new Grafo<String>();
 		
-		String grafo = "A-B:5,B-C:10,C-A:15";
-		Scanner sc = new Scanner(grafo);
-		String[] edges = grafo.split(",");
+		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
+		Scanner sc = new Scanner(fgrafo);
+	
+		
+		while(sc.hasNext()){
+			String sv1 = sc.next();
+			String sv2 = sc.next();
+			String peso = sc.next();
+			Vertice<String> v1 = new Vertice<String>(sv1);
+			Vertice<String> v2 = new Vertice<String>(sv2);
+			grf.addEdge(v1, v2, Double.parseDouble(peso));
+		}
 		
 		
-		Aresta<String>  aresta = new Aresta<String>(new Vertice<String>("Fabiano",1.0),new Vertice<String>("tavares",2.0),10.0);
-		Aresta<String>  aresta1 = new Aresta<String>(new Vertice<String>("Fabiano",1.0),new Vertice<String>("silva",3.0),15.0);
-		Aresta<String>  aresta2 = new Aresta<String>(new Vertice<String>("silva",3.0),new Vertice<String>("tavares",2.0),5.0);
+		
+		/*
+		Aresta<String>  aresta = new Aresta<String>(new Vertice<String>("Fabiano"),new Vertice<String>("tavares"),10.0);
+		Aresta<String>  aresta1 = new Aresta<String>(new Vertice<String>("Fabiano"),new Vertice<String>("silva"),15.0);
+		Aresta<String>  aresta2 = new Aresta<String>(new Vertice<String>("silva"),new Vertice<String>("tavares"),5.0);
 		
 		grf.addElem(aresta);
 		grf.addElem(aresta1);
 		grf.addElem(aresta2);
-		
+		*/
 		System.out.println("Fim !");
 		
 	}

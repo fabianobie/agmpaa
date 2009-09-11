@@ -16,16 +16,14 @@ import java.util.ArrayList;
 
 public class Vertice<T>{
 	private T info;
-	private Double chave;
 	private ArrayList<Aresta<T>> listAdj = new ArrayList<Aresta<T>>();
 	
 	/**
 	 * @param string
 	 * @param i
 	 */
-	public Vertice(T info, Double chave) {
+	public Vertice(T info) {
 		this.info = info;
-		this.chave = chave;
 	}
 	public T getInfo() {
 		return info;
@@ -33,12 +31,7 @@ public class Vertice<T>{
 	public void setInfo(T info) {
 		this.info = info;
 	}
-	public Double getChave() {
-		return chave;
-	}
-	public void setChave(Double chave) {
-		this.chave = chave;
-	}
+
 	public ArrayList<Aresta<T>> getListAdj() {
 		return listAdj;
 	}
@@ -55,7 +48,7 @@ public class Vertice<T>{
 			//return false;
 		Vertice<T> vrtx = (Vertice<T>) obj;
 		
-		if (vrtx.getChave().equals(chave) && vrtx.getInfo().equals(info))
+		if (vrtx.getInfo().equals(info))
 			return true;
 		else
 			return false;
