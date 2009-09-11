@@ -15,11 +15,12 @@ public class Aresta<T>{
 
 	private Vertice<T> A;
 	private Vertice<T> B;
-	private double peso;
+	private Double peso;
 	
-	public Aresta(Vertice<T> A, Vertice<T> B) {
+	public Aresta(Vertice<T> A, Vertice<T> B, Double peso) {
 		this.A = A;
 		this.B = B;
+		this.peso = peso;
 	}
 
 	public Vertice<T> getA() {
@@ -48,8 +49,8 @@ public class Aresta<T>{
 
 	@Override 
 	public boolean equals(Object obj) {
-		if (obj instanceof Aresta)
-			return false;
+		//if (obj instanceof Aresta)
+			//return false;
 		Aresta<T> edg = (Aresta<T>) obj;
 		if ((edg.getA().equals(A) && edg.getB().equals(B))
 				|| (edg.getB().equals(A) && edg.getA().equals(B)))
