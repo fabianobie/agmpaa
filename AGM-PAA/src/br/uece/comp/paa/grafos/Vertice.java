@@ -53,5 +53,16 @@ public class Vertice<T>{
 		else
 			return false;
 	}
+	
+	@Override
+	public String toString() {
+		String res =  "V [info=" + info + ", listAdj=[";
+		for (Aresta<T> e : listAdj) {
+			res += e.toString();
+		}
+		res += "] ]";
+		return res;
+	}
+	
 		
 }

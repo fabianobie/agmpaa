@@ -47,6 +47,11 @@ public class Aresta<T>{
 		this.peso = peso;
 	}
 
+	@Override
+	public String toString() {
+		return "E [" + A.getInfo() + "-" + B.getInfo() + ":" + peso + "]";
+	}
+
 	@Override 
 	public boolean equals(Object obj) {
 		//if (obj instanceof Aresta)
