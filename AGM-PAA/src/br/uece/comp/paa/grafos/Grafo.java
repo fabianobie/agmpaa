@@ -40,6 +40,7 @@ import br.uece.comp.paa.grafos.ui.GrafosUtil;
  */
 public class Grafo <T>{
 	
+	private String nome="GRAFO_PAA";
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
 	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
@@ -66,6 +67,10 @@ public class Grafo <T>{
 			int i = getVertice(b);
 			vertices.get(i).addAdj(edg);
 		}
+	}
+	
+	public void addElem(Vertice<T> vrtx){
+		this.vertices.add(vrtx);
 	}
 	
 	public boolean hasVertice(Vertice<T> vrtx){
@@ -96,6 +101,14 @@ public class Grafo <T>{
 	}
 	
 	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	@Override
 	public String toString() {
 		String res = "Grafo[\n";
