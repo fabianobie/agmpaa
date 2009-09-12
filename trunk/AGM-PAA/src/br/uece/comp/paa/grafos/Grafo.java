@@ -32,6 +32,8 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
+import br.uece.comp.paa.grafos.ui.GrafosUtil;
+
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
@@ -108,61 +110,59 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		Grafo<String> grf = new Grafo<String>();
-		
-		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
-		Scanner sc = new Scanner(fgrafo);
-	
-		
-		while(sc.hasNext()){
-			String sv1 = sc.next();
-			String sv2 = sc.next();
-			String peso = sc.next();
-			Vertice<String> v1 = new Vertice<String>(sv1);
-			Vertice<String> v2 = new Vertice<String>(sv2);
-			grf.addEdge(v1, v2, Double.parseDouble(peso));
-		}
-		
-
-		System.out.println(grf);
-		
-		
-		
-		GraphModel model = new DefaultGraphModel();
-		GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
-		JGraph graph = new JGraph(model, view);
-		
-		ArrayList<Vertice<String>> vrtx = grf.getVertices();
-		DefaultGraphCell[] cells = new DefaultGraphCell[vrtx.size()];
-		
-		for(int i=0; i< vrtx.size();i++){
-			cells[i] = new DefaultGraphCell(vrtx.get(i).getInfo());
-			GraphConstants.setBounds(cells[i].getAttributes(),new Rectangle2D.Double(20, 20, 40, 20));
-			GraphConstants.setGradientColor(cells[i].getAttributes(),Color.gray);
-			GraphConstants.setOpaque(cells[i].getAttributes(), true);
-			DefaultPort port = new DefaultPort();
-			cells[i].add(port);
-			
-		}
-		
-		
-		DefaultEdge edge = new DefaultEdge();
-		edge.setSource(cells[0].getChildAt(0));
-		edge.setTarget(cells[1].getChildAt(0));
-		//cells[2] = edge;
-		view.setAutoSizeOnValueChange(false);
-
-		int arrow = GraphConstants.ARROW_NONE;
-		GraphConstants.setLineEnd(edge.getAttributes(), arrow);
-		GraphConstants.setEndFill(edge.getAttributes(), true);
-		graph.getGraphLayoutCache().insert(edge);
-		graph.getGraphLayoutCache().insert(cells);
+		Grafo<String> grf = GrafosUtil.fileToGrafo("nomeArqGrafos.txt");
+		JGraph graph = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new JScrollPane(graph));
+		frame.setBounds(10, 10, 500, 600);
 		frame.pack();
 		frame.setVisible(true);
-		
-
 	}
 	
+	
 }
+
+/*		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
+Scanner sc = new Scanner(fgrafo);
+
+
+while(sc.hasNext()){
+	String sv1 = sc.next();
+	String sv2 = sc.next();
+	String peso = sc.next();
+	Vertice<String> v1 = new Vertice<String>(sv1);
+	Vertice<String> v2 = new Vertice<String>(sv2);
+	grf.addEdge(v1, v2, Double.parseDouble(peso));
+}
+
+
+System.out.println(grf);
+
+
+
+GraphModel model = new DefaultGraphModel();
+GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
+JGraph graph = new JGraph(model, view);
+
+ArrayList<Vertice<String>> vrtx = grf.getVertices();
+DefaultGraphCell[] cells = new DefaultGraphCell[vrtx.size()];
+
+for(int i=0; i< vrtx.size();i++){
+	cells[i] = GrafosUtil.createCell(vrtx.get(i).getInfo(),
+			new Rectangle2D.Double(Math.random()*100, Math.random()*100, 20, 20), false);
+}
+
+
+DefaultEdge edge = new DefaultEdge();
+edge.setSource(cells[0].getChildAt(0));
+edge.setTarget(cells[1].getChildAt(0));
+//cells[2] = edge;
+view.setAutoSizeOnValueChange(false);
+
+int arrow = GraphConstants.ARROW_NONE;
+GraphConstants.setLineEnd(edge.getAttributes(), arrow);
+GraphConstants.setEndFill(edge.getAttributes(), true);
+graph.getGraphLayoutCache().insert(edge);
+graph.getGraphLayoutCache().insert(cells);*/
+
+
