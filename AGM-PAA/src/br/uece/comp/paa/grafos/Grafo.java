@@ -51,26 +51,28 @@ public class Grafo <T>{
 	public void addElem(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getB();
+		if(!hasAresta(edg)){
+			int ia , ib;
 	
-		if(!hasVertice(a)){
-			a.addAdj(edg);
-			vertices.add(a);
-		}else{
-			int i = getVertice(a);
-			vertices.get(i).addAdj(edg);
-		}
-	
-		if(!hasVertice(b)){
-			b.addAdj(edg);
-			vertices.add(b);
-		}else{
-			int i = getVertice(b);
-			vertices.get(i).addAdj(edg);
+			if(!hasVertice(a))
+				addElem(a);
+			if(!hasVertice(b))
+				addElem(b);
+			
+			ia = getIdVertice(a);
+			ib = getIdVertice(b);
+			
+			Aresta<T> nedg = new Aresta<T>(vertices.get(ia),vertices.get(ib),edg.getPeso());
+			
+			vertices.get(ia).addAdj(nedg);
+			vertices.get(ib).addAdj(nedg);
+			
 		}
 	}
 	
 	public void addElem(Vertice<T> vrtx){
-		this.vertices.add(vrtx);
+		if(!hasVertice(vrtx))
+			this.vertices.add(vrtx);
 	}
 	
 	public boolean hasVertice(Vertice<T> vrtx){
@@ -80,16 +82,61 @@ public class Grafo <T>{
 		return false;
 	}
 	
-	public int getVertice(Vertice<T> vrtx){
+	public boolean hasAresta(Aresta<T> edg){
+			Vertice<T> a = edg.getA(); 
+			Vertice<T> b = edg.getB();
+			
+		for (Vertice<T> V : vertices) {
+			for (Aresta<T> E : V.getListAdj()) {
+				if(E.equals(edg)) return true;
+			}
+		}
+		return false;
+	}
+	
+	public int getIdVertice(Vertice<T> vrtx){
 		for (int i=0 ; i< vertices.size() ; i++) {
 			if(vertices.get(i).equals(vrtx)) return i;	
 		}
 		return -1;
 	}
 	
+	
+	/*private ArrayList<Aresta<T>> getArestas(){
+		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
+		
+		for (Vertice<T> V : vertices) {
+			for (Aresta<T> E : V.getListAdj()) {
+				if(E.equals(edg)) return true;
+			}
+		}
+		
+		return null;
+	}*/
+
+	
+	private int getIdAresta(Aresta<T> edg){
+		Vertice<T> a = edg.getA(); 
+		Vertice<T> b = edg.getB();
+		
+		for (int i=0 ; i< vertices.size() ; i++) {
+			for(int j=0 ; j< vertices.get(i).getListAdj().size() ; j++) {
+				if(vertices.get(i).getListAdj().get(j).equals(edg)) return j;
+			}
+		}
+		return -1;
+	}
+	
 	public void deleteEdge(Aresta<T> edg){
-		edg.getA().getListAdj().remove(edg.getB());
-		edg.getB().getListAdj().remove(edg.getA());
+		Vertice<T> a = edg.getA(); 
+		Vertice<T> b = edg.getB();
+
+		if(hasAresta(edg)){
+			int ia = getIdVertice(a);
+			vertices.get(ia).getListAdj().remove(getIdAresta(edg));
+			int ib = getIdVertice(b);
+			vertices.get(ib).getListAdj().remove(getIdAresta(edg));
+		}
 	}
 
 	public ArrayList<Vertice<T>> getVertices() {
@@ -123,13 +170,40 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		Grafo<String> grf = GrafosUtil.fileToGrafo("nomeArqGrafos.txt");
+		Grafo<String> grf = new Grafo<String>(); //GrafosUtil.fileToGrafo("nomeArqGrafos.txt");
+		/*
 		JGraph graph = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new JScrollPane(graph));
 		frame.setBounds(10, 10, 500, 600);
 		frame.pack();
 		frame.setVisible(true);
+		*/
+		
+		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
+		Scanner sc = new Scanner(fgrafo);
+	
+		
+		while(sc.hasNext()){
+			String sv1 = sc.next();
+			String sv2 = sc.next();
+			String peso = sc.next();
+			Vertice<String> v1 = new Vertice<String>(sv1);
+			Vertice<String> v2 = new Vertice<String>(sv2);
+			grf.addEdge(v1, v2, Double.parseDouble(peso));
+		}
+		
+		String sv1 = "A";
+		String sv2 = "B";
+		String peso = "0.0";
+		Vertice<String> v1 = new Vertice<String>(sv1);
+		Vertice<String> v2 = new Vertice<String>(sv2);
+		
+		//grf.deleteEdge(new Aresta<String>(v1, v2 , 0.0));
+		
+		
+		
+		System.out.println(grf);
 	}
 	
 	
