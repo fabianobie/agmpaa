@@ -44,12 +44,18 @@ public class Kruskal<T> {
 		
 		while(!arestas.isVazio()){
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-			Vertice<T> v1 = new Vertice<T>(nohHeap.getInfo().getA().getInfo());
-			Vertice<T> v2 = new Vertice<T>(nohHeap.getInfo().getB().getInfo());
-			Aresta<T> edg = new Aresta<T>(v1,v2,nohHeap.getInfo().getPeso());
-			
-			result.addElem(edg);
-			if(dfs.isConexo(result) && (result.getVertices().size()==grafo.getVertices().size())) return result;
+			Aresta<T> edg;
+			try {
+				edg = (Aresta<T>) nohHeap.getInfo().clone();
+				if(!result.hasVertice(edg.getA()) || !result.hasVertice(edg.getB()))
+					result.addElem(edg);
+				
+				if(dfs.isConexo(result) && (result.getVertices().size()==grafo.getVertices().size()))
+					return result;
+			} catch (CloneNotSupportedException e) {
+				System.out.println("Erro de Clonagem: KRUSKAL");
+				e.printStackTrace();
+			}
 		}
 		
 		return result;

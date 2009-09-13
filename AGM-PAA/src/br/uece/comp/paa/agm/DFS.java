@@ -45,6 +45,8 @@ public class DFS<T> {
 		grafoDFS = grafo;
 		Boolean conexo = true; // Para testar ao final do mtodo se o grafo 
 		// conexo.
+		if(grafo.getVertices().isEmpty()) return false;
+		
 		HashMap<Object, Integer> param = null;
 		int numVertices = grafo.getVertices().size(); // nmero de vrtices
 		indiceVertice = new Object[numVertices];
@@ -83,8 +85,7 @@ public class DFS<T> {
 	}
 
 	/**
-	 * Chamada Recursiva para percorrer todo o grafo e verificar se  conexo ou
-	 * no.
+	 * Chamada Recursiva para percorrer todo o grafo e verificar se  conexo ou nao
 	 * 
 	 * @param verticeOrigem
 	 */
@@ -99,9 +100,8 @@ public class DFS<T> {
 				vertice = aresta.getB();
 			} else
 				vertice = aresta.getA();
-
+			
 			if (indices.get(vertice.getInfo()) == 0) {
-
 				dfs(vertice);
 
 			}

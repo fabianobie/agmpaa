@@ -21,7 +21,7 @@ import br.uece.comp.paa.grafos.Vertice;
 
 public class Prim<T> {
 
-	public Grafo<T> obterAGM(Grafo<T> grafo) {
+	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
 
 		int numElementos = grafo.getVertices().size();
 		Grafo<T> retorno = new Grafo<T>();
@@ -53,14 +53,14 @@ public class Prim<T> {
 			}
 			// O mnimo a cada iterao para visualizar os mnimos encontrados
 			System.out.println("Peso mnimo:" + aresta.getPeso());
-			a1 = new Vertice<T>(aresta.getA().getInfo());
-			b1 = new Vertice<T>(aresta.getB().getInfo());
+			//a1 = new Vertice<T>(aresta.getA().getInfo());
+			///b1 = new Vertice<T>(aresta.getB().getInfo());
 
 			// Sempre que  encontrada a aresta mnima do array de vrtices
 			// adicionados  adicionada ela  adicionada ao retorno do mtodo
 
-			arestas.add(new Aresta<T>(a1, b1, aresta.getPeso()));
-			retorno.addElem(new Aresta<T>(a1, b1, aresta.getPeso()));
+			arestas.add((Aresta<T>) aresta.clone());
+			retorno.addElem((Aresta<T>) aresta.clone());
 
 			// O trecho testa qual aresta ser adicionada a lista de vrtices
 			if (vertices.contains(aresta.getA())) {
@@ -114,7 +114,7 @@ public class Prim<T> {
 
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		Grafo<Integer> grafo = new Grafo<Integer>();
 		Vertice<Integer> a = new Vertice<Integer>(1);
 		Vertice<Integer> b = new Vertice<Integer>(2);
@@ -155,10 +155,6 @@ public class Prim<T> {
 		
 		Kruskal<Integer> kru = new Kruskal<Integer>();
 		Prim<Integer> prim = new Prim<Integer>();
-		///DFS<Integer> DFS = new DFS<Integer>();
-		//System.out.println("\n O grafo  Conexo?:"+DFS.isConexo(grafo));
-		// System.out.println(grafo.getVertices().size());
-		// System.out.println(prim.obterMinimo(vertices, grafo).toString());
 		System.out.println(grafo);
 		System.out.println(kru.obterAGM(grafo));
 		System.out.println(prim.obterAGM(grafo));
