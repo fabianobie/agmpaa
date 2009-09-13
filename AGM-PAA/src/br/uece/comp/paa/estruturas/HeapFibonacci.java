@@ -26,6 +26,22 @@ public class HeapFibonacci<T> {
 		reset();
 	}
 
+	public int getNumNoh() {
+		return numNoh;
+	}
+
+	public void setNumNoh(int numNoh) {
+		this.numNoh = numNoh;
+	}
+
+	public HeapFibonacciNoh<T> getMinNoh() {
+		return minNoh;
+	}
+
+	public void setMinNoh(HeapFibonacciNoh<T> minNoh) {
+		this.minNoh = minNoh;
+	}
+
 	/**
 	 * Insere novo valor a Heap de Fibonacci
 	 * 
@@ -348,13 +364,13 @@ public class HeapFibonacci<T> {
 	
 	   public static void main(String args[]){
 	        HeapFibonacci<Integer> heap = new HeapFibonacci<Integer>();
-	        
-	        heap.inserir(10, 10);
-	        heap.inserir(20, 20);
-	        heap.inserir(5, 5);
-	        heap.inserir(50, 50);
-	        heap.inserir(25, 25);
-	        heap.extrairMin();
+	        Integer teste = 10;
+	        heap.inserir(10, teste);
+	        heap.inserir(10, teste);
+	        heap.inserir(10, teste);
+	        //heap.inserir(50, 50);
+	        //heap.inserir(25, 25);
+	        //heap.extrairMin();
 	        heap.extrairMin();
 	        
 	        System.out.println(heap);
