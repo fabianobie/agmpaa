@@ -7,32 +7,11 @@
  */
 package br.uece.comp.paa.grafos;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-
-import org.jgraph.JGraph;
-import org.jgraph.graph.DefaultCellViewFactory;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.DefaultGraphModel;
-import org.jgraph.graph.DefaultPort;
-import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.GraphModel;
-
-import br.uece.comp.paa.grafos.ui.GrafosUtil;
+import br.uece.comp.paa.agm.Kruskal;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -102,17 +81,17 @@ public class Grafo <T>{
 	}
 	
 	
-	/*private ArrayList<Aresta<T>> getArestas(){
+	public ArrayList<Aresta<T>> getArestas(){
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		
 		for (Vertice<T> V : vertices) {
 			for (Aresta<T> E : V.getListAdj()) {
-				if(E.equals(edg)) return true;
+	//			if(E.equals(edg)) return true;
 			}
 		}
 		
 		return null;
-	}*/
+	}
 
 	
 	private int getIdAresta(Aresta<T> edg){
@@ -201,9 +180,10 @@ public class Grafo <T>{
 		
 		//grf.deleteEdge(new Aresta<String>(v1, v2 , 0.0));
 		
-		
+		Kruskal<String> kru = new Kruskal<String>();
 		
 		System.out.println(grf);
+		System.out.println(kru.obterAGM(grf));
 	}
 	
 	
