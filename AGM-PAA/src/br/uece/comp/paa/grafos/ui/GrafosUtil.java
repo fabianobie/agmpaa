@@ -19,6 +19,7 @@ import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 
+import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
 
@@ -43,7 +44,35 @@ public class GrafosUtil{
 		return null;
 	}
 	
-	public static Grafo<String> fileToGrafo(String nameFile){
+	public static Grafo<String> fileToGrafo(String nameFile) throws FileNotFoundException{
+		Grafo<String> G =  new Grafo<String>();
+		File fgrafo = new File(nameFile);
+		Scanner scan  = new Scanner(fgrafo);
+		String nome =  scan.next();
+		int numVertice = scan.nextInt();
+		int tipo = scan.nextInt();
+		int numAresta = scan.nextInt();
+		
+		G.setNome(nome);
+		if(tipo==1){
+			for (int i = 0; i < numVertice; i++) {
+				Vertice<String> vrtx = new Vertice<String>(scan.next());
+				vrtx.setPosX(Double.parseDouble(scan.next()));
+				vrtx.setPosY(Double.parseDouble(scan.next()));
+				G.addElem(vrtx);
+			}
+			for (int i = 0; i < numAresta; i++) {
+				Aresta<String> edg = new Aresta<String>(new Vertice<String>(scan.next()),new Vertice<String>(scan.next()),Double.parseDouble(scan.next()));
+			}
+		}else if(tipo==0){
+			
+		}
+		
+		
+		
+		
+		
+		
 		return null;
 	}
 	
