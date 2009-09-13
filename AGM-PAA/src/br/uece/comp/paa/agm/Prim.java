@@ -3,14 +3,14 @@ package br.uece.comp.paa.agm;
 
 /**
  * PAA - Projeto de Analise e Algoritmos
- * Universidade Estadual do Cear� - UECE
- * Alunos: Fabiano Tavares e Diego S�
+ * Universidade Estadual do Cear - UECE
+ * Alunos: Fabiano Tavares e Diego Sá
  * Prof. Marcos Negreiro
  *
  */
 
 /**
- * @author Diego S� Cardoso (diegoccx@gmail.com)
+ * @author Diego Sá Cardoso (diegoccx@gmail.com)
  *
  */
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class Prim<T> {
 
 		Vertice<T> a;
 		Vertice<T> b;
-		Double minimo = 1000.0;
+		Double minimo = Double.MAX_VALUE;
 		int i = 0;
 		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
 		// aresta com o peso mnimo.
@@ -104,7 +104,6 @@ public class Prim<T> {
 				}
 				if (aresta.getPeso() < minimo && !vertices.contains(b)) {
 					minimo = aresta.getPeso();
-
 					retorno = aresta;
 				}
 			}
@@ -153,13 +152,15 @@ public class Prim<T> {
 		grafo.addEdge(m, o, 1.0);
 
 		// Teste do Prim e do DFS
-
+		
+		Kruskal<Integer> kru = new Kruskal<Integer>();
 		Prim<Integer> prim = new Prim<Integer>();
-		DFS<Integer> DFS = new DFS<Integer>();
-		System.out.println("\n O grafo  Conexo?:"+DFS.isConexo(grafo));
+		///DFS<Integer> DFS = new DFS<Integer>();
+		//System.out.println("\n O grafo  Conexo?:"+DFS.isConexo(grafo));
 		// System.out.println(grafo.getVertices().size());
 		// System.out.println(prim.obterMinimo(vertices, grafo).toString());
 		System.out.println(grafo);
+		System.out.println(kru.obterAGM(grafo));
 		System.out.println(prim.obterAGM(grafo));
 
 	}

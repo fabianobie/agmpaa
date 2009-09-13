@@ -11,7 +11,7 @@ package br.uece.comp.paa.agm;
  */
 
 /**
- * @author Diego S Cardoso (diegoccx@gmail.com)
+ * @author Diego Sá Cardoso (diegoccx@gmail.com)
  *
  */
 
@@ -73,7 +73,7 @@ public class DFS<T> {
 					+ indices.get(grafoDFS.getVertices().get(i).getInfo())
 					+ "(" + grafoDFS.getVertices().get(i).getInfo() + ")");
 		}
-
+		
 		if (conexo) {
 
 			return true;
@@ -93,7 +93,7 @@ public class DFS<T> {
 		Boolean conexo = true;
 
 		Vertice<T> vertice = null;
-		//Lao para percorrer todas as arestas do vrtice selecionado
+		//Laço para percorrer todas as arestas do vrtice selecionado
 		for (Aresta<T> aresta : verticeOrigem.getListAdj()) {
 			if (verticeOrigem.equals(aresta.getA())) {
 				vertice = aresta.getB();
