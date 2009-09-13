@@ -88,6 +88,15 @@ public class Vertice<T>{
 		res += "] ]";
 		return res;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Vertice<T> cln = new Vertice<T>(info);
+		cln.posX = posX;
+		cln.posY = posY;
+		return cln;
+	}
+	
 	
 		
 }

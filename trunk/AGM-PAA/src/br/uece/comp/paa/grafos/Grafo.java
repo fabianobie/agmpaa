@@ -11,7 +11,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+
+import org.jgraph.JGraph;
+
 import br.uece.comp.paa.agm.Kruskal;
+import br.uece.comp.paa.agm.Prim;
+import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -21,6 +28,7 @@ public class Grafo <T>{
 	
 	private String nome="GRAFO_PAA";
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
+	private int numAresta=0; 
 	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
@@ -46,6 +54,7 @@ public class Grafo <T>{
 			vertices.get(ia).addAdj(nedg);
 			vertices.get(ib).addAdj(nedg);
 			
+			numAresta++;
 		}
 	}
 	
@@ -115,6 +124,7 @@ public class Grafo <T>{
 			vertices.get(ia).getListAdj().remove(getIdAresta(edg));
 			int ib = getIdVertice(b);
 			vertices.get(ib).getListAdj().remove(getIdAresta(edg));
+			numAresta--;
 		}
 	}
 
@@ -135,6 +145,14 @@ public class Grafo <T>{
 		this.nome = nome;
 	}
 
+	public int getNumAresta() {
+		return numAresta;
+	}
+
+	public void setNumAresta(int numAresta) {
+		this.numAresta = numAresta;
+	}
+
 	@Override
 	public String toString() {
 		String res = "Grafo[\n";
@@ -149,87 +167,25 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		Grafo<String> grf = new Grafo<String>(); //GrafosUtil.fileToGrafo("nomeArqGrafos.txt");
-		/*
+		Grafo<String> grf = GrafosUtil.fileToGrafo("files/grafo.txt");
+		System.out.println(grf);
+		Kruskal<String> kru = new Kruskal<String>();
+		System.out.println(grf);
 		JGraph graph = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(new JScrollPane(graph));
 		frame.setBounds(10, 10, 500, 600);
 		frame.pack();
 		frame.setVisible(true);
-		*/
 		
-		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
-		Scanner sc = new Scanner(fgrafo);
+
+	    JGraph graph2 = GrafosUtil.desenhaGrafo(kru.obterAGM(grf));
+		JFrame frame2 = new JFrame();
+		frame2.getContentPane().add(new JScrollPane(graph2));
+		frame2.setBounds(10, 10, 500, 600);
+		frame2.pack();
+		frame2.setVisible(true);
 	
-		
-		while(sc.hasNext()){
-			String sv1 = sc.next();
-			String sv2 = sc.next();
-			String peso = sc.next();
-			Vertice<String> v1 = new Vertice<String>(sv1);
-			Vertice<String> v2 = new Vertice<String>(sv2);
-			grf.addEdge(v1, v2, Double.parseDouble(peso));
-		}
-		
-		String sv1 = "A";
-		String sv2 = "B";
-		String peso = "0.0";
-		Vertice<String> v1 = new Vertice<String>(sv1);
-		Vertice<String> v2 = new Vertice<String>(sv2);
-		
-		//grf.deleteEdge(new Aresta<String>(v1, v2 , 0.0));
-		
-		Kruskal<String> kru = new Kruskal<String>();
-		
-		System.out.println(grf);
-		System.out.println(kru.obterAGM(grf));
 	}
 	
-	
 }
-
-/*		String fgrafo = "A B 10.0\nC B 20.0\nA C 5.0";
-Scanner sc = new Scanner(fgrafo);
-
-
-while(sc.hasNext()){
-	String sv1 = sc.next();
-	String sv2 = sc.next();
-	String peso = sc.next();
-	Vertice<String> v1 = new Vertice<String>(sv1);
-	Vertice<String> v2 = new Vertice<String>(sv2);
-	grf.addEdge(v1, v2, Double.parseDouble(peso));
-}
-
-
-System.out.println(grf);
-
-
-
-GraphModel model = new DefaultGraphModel();
-GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
-JGraph graph = new JGraph(model, view);
-
-ArrayList<Vertice<String>> vrtx = grf.getVertices();
-DefaultGraphCell[] cells = new DefaultGraphCell[vrtx.size()];
-
-for(int i=0; i< vrtx.size();i++){
-	cells[i] = GrafosUtil.createCell(vrtx.get(i).getInfo(),
-			new Rectangle2D.Double(Math.random()*100, Math.random()*100, 20, 20), false);
-}
-
-
-DefaultEdge edge = new DefaultEdge();
-edge.setSource(cells[0].getChildAt(0));
-edge.setTarget(cells[1].getChildAt(0));
-//cells[2] = edge;
-view.setAutoSizeOnValueChange(false);
-
-int arrow = GraphConstants.ARROW_NONE;
-GraphConstants.setLineEnd(edge.getAttributes(), arrow);
-GraphConstants.setEndFill(edge.getAttributes(), true);
-graph.getGraphLayoutCache().insert(edge);
-graph.getGraphLayoutCache().insert(cells);*/
-
-
