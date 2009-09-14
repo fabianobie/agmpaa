@@ -92,38 +92,32 @@ public class Grafo <T>{
 	
 	public ArrayList<Aresta<T>> getArestas(){
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
-		
-		for (Vertice<T> V : vertices) {
+		ArrayList<Vertice<T>> vrtxs = new ArrayList<Vertice<T>>();
+		for (Vertice<T> V : this.getVertices()){
+			vrtxs.add(V);
 			for (Aresta<T> E : V.getListAdj()) {
-	//			if(E.equals(edg)) return true;
+				boolean a,b;
+				a=vrtxs.contains(E.getA());
+				b=vrtxs.contains(E.getB());
+				if (!(a && b) || (!a && b) || (a && !b)) {
+					arestas.add(E);
+				}
 			}
 		}
-		
 		return null;
 	}
 
-	
-	private int getIdAresta(Aresta<T> edg){
-		Vertice<T> a = edg.getA(); 
-		Vertice<T> b = edg.getB();
-		
-		for (int i=0 ; i< vertices.size() ; i++) {
-			for(int j=0 ; j< vertices.get(i).getListAdj().size() ; j++) {
-				if(vertices.get(i).getListAdj().get(j).equals(edg)) return j;
-			}
-		}
-		return -1;
-	}
-	
 	public void deleteEdge(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getB();
 
 		if(hasAresta(edg)){
 			int ia = getIdVertice(a);
-			vertices.get(ia).getListAdj().remove(getIdAresta(edg));
+			Vertice<T> v1 = vertices.get(ia);
+			v1.getListAdj().remove(v1.getIdAresta(edg));
 			int ib = getIdVertice(b);
-			vertices.get(ib).getListAdj().remove(getIdAresta(edg));
+			Vertice<T> v2 = vertices.get(ib);
+			v2.getListAdj().remove(v2.getIdAresta(edg));
 			numAresta--;
 		}
 	}
@@ -178,8 +172,11 @@ public class Grafo <T>{
 		frame.pack();
 		frame.setVisible(true);
 		
-
-	    JGraph graph2 = GrafosUtil.desenhaGrafo(kru.obterAGM(grf));
+		
+		Vertice<String> a = new Vertice<String>("D"); 
+		Vertice<String> b = new Vertice<String>("C");
+		grf.deleteEdge(new Aresta<String>(a, b, 1.0));
+	    JGraph graph2 = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame2 = new JFrame();
 		frame2.getContentPane().add(new JScrollPane(graph2));
 		frame2.setBounds(10, 10, 500, 600);
