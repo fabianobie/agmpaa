@@ -67,6 +67,15 @@ public class Vertice<T>{
 		listAdj.add(edg);
 	}
 	
+	public int getIdAresta(Aresta<T> edg){
+		Vertice<T> a = edg.getA();
+		Vertice<T> b = edg.getB();		
+			for(int j=0 ; j< this.getListAdj().size() ; j++) {
+				if(this.getListAdj().get(j).equals(edg)) return j;
+			}
+		return -1;
+	}
+	
 	@Override 
 	public boolean equals(Object obj) {
 		//if (obj instanceof Vertice)
