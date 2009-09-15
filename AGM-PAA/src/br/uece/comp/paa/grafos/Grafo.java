@@ -104,7 +104,7 @@ public class Grafo <T>{
 				}
 			}
 		}
-		return null;
+		return arestas;
 	}
 
 	public void deleteEdge(Aresta<T> edg){
@@ -160,10 +160,10 @@ public class Grafo <T>{
 	/*
 	 * Testando Grafos
 	 */
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
 		Grafo<String> grf = GrafosUtil.fileToGrafo("files/grafo.txt");
 		System.out.println(grf);
-		Kruskal<String> kru = new Kruskal<String>();
+		Prim<String> kru = new Prim<String>();
 		System.out.println(grf);
 		JGraph graph = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame = new JFrame();
@@ -172,11 +172,7 @@ public class Grafo <T>{
 		frame.pack();
 		frame.setVisible(true);
 		
-		
-		Vertice<String> a = new Vertice<String>("D"); 
-		Vertice<String> b = new Vertice<String>("C");
-		grf.deleteEdge(new Aresta<String>(a, b, 1.0));
-	    JGraph graph2 = GrafosUtil.desenhaGrafo(grf);
+	    JGraph graph2 = GrafosUtil.desenhaGrafo(kru.obterAGM(grf));
 		JFrame frame2 = new JFrame();
 		frame2.getContentPane().add(new JScrollPane(graph2));
 		frame2.setBounds(10, 10, 500, 600);
