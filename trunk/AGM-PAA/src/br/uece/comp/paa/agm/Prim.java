@@ -88,11 +88,6 @@ public class Prim<T> {
 	 */
 	public Aresta<T> obterMinimo(Grafo<T> subgrafo, Grafo<T> grafo) {
 		Aresta<T> retorno = null;
-
-		//Vertice<T> a;
-		//Vertice<T> b;
-		Double minimo = Double.MAX_VALUE;
-		int i = 0;
 		
 		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
 		ArrayList<Aresta<T>> edgs = grafo.getArestas();
