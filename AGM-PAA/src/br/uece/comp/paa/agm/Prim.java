@@ -111,7 +111,7 @@ public class Prim<T> {
 				boolean a,b;
 				a=subgrafo.hasVertice(edg.getA());
 				b=subgrafo.hasVertice(edg.getB());
-				if (!(a && b) && ( (!a && b) || (a && !b))) {
+				if ((a || b) && !(a && b)) {
 					retorno = edg;
 					break;
 				}
