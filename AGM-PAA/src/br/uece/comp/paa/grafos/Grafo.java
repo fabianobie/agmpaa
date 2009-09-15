@@ -16,8 +16,12 @@ import javax.swing.JScrollPane;
 
 import org.jgraph.JGraph;
 
+import br.uece.comp.paa.agm.Boruvka;
+import br.uece.comp.paa.agm.DFS;
 import br.uece.comp.paa.agm.Kruskal;
 import br.uece.comp.paa.agm.Prim;
+import br.uece.comp.paa.estruturas.HeapFibonacci;
+import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 /**
@@ -28,7 +32,7 @@ public class Grafo <T>{
 	
 	private String nome="GRAFO_PAA";
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
-	private int numAresta=0; 
+	private int numAresta=0;
 	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
@@ -99,7 +103,7 @@ public class Grafo <T>{
 				boolean a,b;
 				a=vrtxs.contains(E.getA());
 				b=vrtxs.contains(E.getB());
-				if (!(a && b) || (!a && b) || (a && !b)) {
+				if (!(a && b)) {
 					arestas.add(E);
 				}
 			}
@@ -156,6 +160,121 @@ public class Grafo <T>{
 		res += " ]";
 		return res;
 	}
+	
+	
+	public ArrayList<Grafo<T>> obterKAGMS()
+			throws CloneNotSupportedException {
+		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
+		ArrayList<Aresta<T>> arestasVisitadas = new ArrayList<Aresta<T>>();
+		DFS<T> dfs = new DFS<T>();
+		int contInterno = 1;
+		int contExterno = 1;
+		int numArestas = 7; // numero fornecido pelo arquivo.
+		Boolean noVertice = false;
+		Aresta<T> aresta = null;
+		for (int j = 0; j < arestasVisitadas.size()
+				|| arestasVisitadas.size() == 0; j++) {
+			for (int i = 0; i < numArestas; i++) {
+				System.out.println(i);
+				for (Aresta<T> aresta1 : arestas) {
+
+					this.deleteEdge((Aresta<T>) aresta1);
+
+				}
+				for (int n = 0; n < j; n++) {
+
+					this.deleteEdge((Aresta<T>) arestasVisitadas.get(n));
+
+				}
+				if (obterArestaMinima(this) == null) {
+					break;
+				}
+				
+				Aresta<T> aux =(Aresta<T>) obterArestaMinima(this); 
+				aresta = (Aresta<T>) aux.clone();
+
+				this.deleteEdge(aresta);
+
+				for (Aresta<T> aresta1 : arestas) {
+					this.addElem((Aresta<T>) aresta1);
+				}
+
+				arestas.add((Aresta<T>) aresta);
+
+				if (dfs.isConexo(this)) {
+					System.out.println("adicionou retirando  a aresta de peso:"
+							+ aresta.getPeso() + ", do vertice:"
+							+ aresta.getA().getInfo() + "--"
+							+ aresta.getB().getInfo());
+					
+					Kruskal kru = new Kruskal<T>(); 
+					grafos.add(kru.obterAGM((Grafo<T>) this.clone()));
+
+				} else
+					;
+
+			}
+			System.out.println("adicionando aresta superior");
+			if (arestasVisitadas.size() < 1) {
+				arestasVisitadas = (ArrayList<Aresta<T>>) arestas.clone();
+			}
+			arestas = new ArrayList<Aresta<T>>();
+		}
+		return grafos;
+	}
+
+	/**
+	 * @param grafo
+	 * @return
+	 */
+	private Object obterArestaMinima(Grafo<T> grafo) {
+		Aresta<T> retorno = null;
+		
+		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
+		ArrayList<Aresta<T>> edgs = grafo.getArestas();
+		
+		for (Aresta<T> E : edgs) {
+			arestas.inserir(E.getPeso(), E);
+		}
+		
+		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
+		// aresta com o peso mnimo.
+		while(!arestas.isVazio()){
+			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
+			Aresta<T> edg;
+			try {
+				edg = (Aresta<T>) nohHeap.getInfo().clone();
+				boolean a,b;
+				a=grafo.hasVertice(edg.getA());
+				b=grafo.hasVertice(edg.getB());
+				if ((a || b) && !(a && b)) {
+					retorno = edg;
+					break;
+				}
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return retorno;
+	}
+	
+	 @Override
+     public Object clone() throws CloneNotSupportedException {
+            
+             Grafo<T> grafoNovo = new Grafo<T>();
+             Aresta<T> arestaNova = null;
+           
+             for(Vertice<T> vertice: vertices){
+                 for(Aresta<T> aresta : vertice.getListAdj()){
+                     arestaNova = ((Aresta<T>) aresta.clone());
+                     grafoNovo.addElem(arestaNova);
+                 }
+             }
+             return grafoNovo;
+     }
 
 	/*
 	 * Testando Grafos
@@ -163,7 +282,7 @@ public class Grafo <T>{
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
 		Grafo<String> grf = GrafosUtil.fileToGrafo("files/grafo.txt");
 		System.out.println(grf);
-		Prim<String> kru = new Prim<String>();
+		Boruvka<String> kru = new Boruvka<String>();
 		System.out.println(grf);
 		JGraph graph = GrafosUtil.desenhaGrafo(grf);
 		JFrame frame = new JFrame();
@@ -178,7 +297,6 @@ public class Grafo <T>{
 		frame2.setBounds(10, 10, 500, 600);
 		frame2.pack();
 		frame2.setVisible(true);
-	
 	}
 	
 }
