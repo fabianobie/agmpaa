@@ -15,6 +15,8 @@ package br.uece.comp.paa.agm;
  */
 import java.util.ArrayList;
 
+import br.uece.comp.paa.estruturas.HeapFibonacci;
+import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
@@ -45,7 +47,11 @@ public class Prim<T> {
 				System.out.print("\t" + vertices.get(i).getInfo() + "("
 						+ vertices.get(i).getListAdj().size() + ")");
 			}
-			aresta = obterMinimo(vertices, grafo);
+			
+			Grafo<T> subgrafo = new Grafo<T>();
+			subgrafo.setVertices(vertices);
+			
+			aresta = obterMinimo(subgrafo, grafo);
 			// Neste trecho o algoritmo j retorna o resultado parcial caso o
 			// grafo seja desconexo
 			if (aresta == null) {
@@ -76,38 +82,43 @@ public class Prim<T> {
 	/**
 	 * Mtodo que retorna a aresta mnima de um conjunto de vrtices de entrada
 	 * 
-	 * @param vertices
+	 * @param subgrafo
 	 * @param grafo
 	 * @return
 	 */
-	public Aresta<T> obterMinimo(ArrayList<Vertice<T>> vertices, Grafo<T> grafo) {
+	public Aresta<T> obterMinimo(Grafo<T> subgrafo, Grafo<T> grafo) {
 		Aresta<T> retorno = null;
 
-		Vertice<T> a;
-		Vertice<T> b;
+		//Vertice<T> a;
+		//Vertice<T> b;
 		Double minimo = Double.MAX_VALUE;
 		int i = 0;
+		
+		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
+		ArrayList<Aresta<T>> edgs = grafo.getArestas();
+		
+		for (Aresta<T> E : edgs) {
+			arestas.inserir(E.getPeso(), E);
+		}
+		
 		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
 		// aresta com o peso mnimo.
-		for (Vertice<T> vertice : vertices) {
-
-			for (Aresta<T> aresta : vertice.getListAdj()) {
-
-				if (vertice.equals(aresta.getA())) {
-					a = aresta.getA();
-					b = aresta.getB();
+		while(!arestas.isVazio()){
+			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
+			Aresta<T> edg;
+			try {
+				edg = (Aresta<T>) nohHeap.getInfo().clone();
+				boolean a,b;
+				a=subgrafo.hasVertice(edg.getA());
+				b=subgrafo.hasVertice(edg.getB());
+				if (!(a && b) && ( (!a && b) || (a && !b))) {
+					retorno = edg;
+					break;
 				}
-
-				else {
-					b = aresta.getA();
-					a = aresta.getB();
-				}
-				if (aresta.getPeso() < minimo && !vertices.contains(b)) {
-					minimo = aresta.getPeso();
-					retorno = aresta;
-				}
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
 		}
 
 		return retorno;
@@ -156,7 +167,7 @@ public class Prim<T> {
 		Kruskal<Integer> kru = new Kruskal<Integer>();
 		Prim<Integer> prim = new Prim<Integer>();
 		System.out.println(grafo);
-		System.out.println(kru.obterAGM(grafo));
+		//System.out.println(kru.obterAGM(grafo));
 		System.out.println(prim.obterAGM(grafo));
 
 	}
