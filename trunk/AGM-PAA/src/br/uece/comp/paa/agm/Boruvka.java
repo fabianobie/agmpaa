@@ -9,6 +9,7 @@ package br.uece.comp.paa.agm;
 
 import java.util.ArrayList;
 
+import br.uece.comp.paa.agm.interfaces.Iagm;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
@@ -19,9 +20,13 @@ import br.uece.comp.paa.grafos.Vertice;
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
  */
-public class Boruvka<T> {
+public class Boruvka<T> implements Iagm<T>{
 	
-	public Grafo<T> obterAGM(Grafo<T> grafo) {
+	/* (non-Javadoc)
+	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
+	 */
+	@Override
+	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
 		ArrayList<Grafo<T>> listG = new ArrayList<Grafo<T>>();
 		Grafo<T> result = new Grafo<T>();
 		
@@ -62,6 +67,7 @@ public class Boruvka<T> {
 		
 		return result;
 	}
+	
 	
 	
 	/**
@@ -105,89 +111,4 @@ public class Boruvka<T> {
 
 	}
 	
-	
 }
-
-/*
-package br.uece.comp.paa.agm;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import br.uece.comp.paa.grafos.Aresta;
-import br.uece.comp.paa.grafos.Grafo;
-
-*//**
- * @author Fabiano Tavares (fabiano.bie@gmail.com)
- *
- *//*
-public class Boruvka<T> {
-    public Grafo<T> appliquer(Grafo<T> graphe) {
-        List<Aresta<T>> Arestas = new ArrayList<Aresta<T>>(graphe.getArestas());
-        List<Aresta> l = new ArrayList<Aresta>();
-        Map<Aresta, Aresta> Arestas_originales = pondererArestas(Arestas, l);
-
-        List<Aresta> r = doBoruvka(new Grafo(l));
-        Grafo<T> result = new Grafo<T>();
-        for (Aresta a : r)
-                result.ajouterAresta(Arestas_originales.get(a));
-        return result;
-}
-
-protected Map<Aresta, Aresta> pondererArestas(Collection<Aresta> Arestas,
-                List<Aresta> l_out) {
-        // maps copy -> original
-        Map<Aresta, Aresta> Arestas_originales = new HashMap<Aresta, Aresta>();
-
-        // création des arêtes
-        final int mul = Arestas.size() + 1;
-        int i = 0;
-        for (Aresta a : Arestas) {
-                Aresta cp = new Aresta(a.getU(), a.getV(), a.getPoids() * mul + i);
-                l_out.add(cp);
-                Arestas_originales.put(cp, a);
-                ++i;
-        }
-        return Arestas_originales;
-}
-
-protected List<Aresta> doBoruvka(Grafo<T> g) {
-        List<Aresta> acpm = new ArrayList<Aresta>();
-        while (g.getSommets().size() > 1) {
-                phaseBoruvka(g, acpm);
-        }
-        return acpm;
-}
-
-protected void phaseBoruvka(Grafo<T> g, List<Aresta> acpm) {
-        if (g.getSommets().size() > 1) {
-                Set<Aresta> Arestas_mini = new HashSet<Aresta>();
-                for (Integer s : g.getSommets()) {
-                        // obtention de l'Aresta minimale
-                        Aresta Aresta_min = null;
-                        for (Aresta a : g.getArestasAdjacentes(s.intValue())) {
-                                if (Aresta_min == null || Aresta_min.getPoids() > a.getPoids())
-                                        Aresta_min = a;
-                        }
-                        assert (Aresta_min != null);
-                        Arestas_mini.add(Aresta_min);
-                }
-
-                for (Aresta a : Arestas_mini)
-                        g.unir(a);
-
-                acpm.addAll(Arestas_mini);
-        }
-}
-
-public String getName() {
-        return "Boruvka";
-}
-
-}
-*/
