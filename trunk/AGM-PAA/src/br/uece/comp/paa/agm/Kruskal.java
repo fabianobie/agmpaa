@@ -9,6 +9,7 @@ package br.uece.comp.paa.agm;
 
 import java.util.ArrayList;
 
+import br.uece.comp.paa.agm.interfaces.Iagm;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
@@ -19,9 +20,13 @@ import br.uece.comp.paa.grafos.Vertice;
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
  */
-public class Kruskal<T> {
-	
-	public Grafo<T> obterAGM(Grafo<T> grafo) {
+public class Kruskal<T>  implements Iagm<T>{
+
+	/* (non-Javadoc)
+	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
+	 */
+	@Override
+	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
 		Grafo<T> result = new Grafo<T>();
 		result.setNome(grafo.getNome()+"_MINIMO");
 		
@@ -59,6 +64,8 @@ public class Kruskal<T> {
 		}
 		
 		return result;
+
 	}
+	
 	
 }
