@@ -7,11 +7,7 @@
  */
 package br.uece.comp.paa.agm.interfaces;
 
-import java.util.ArrayList;
-
-import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
-import br.uece.comp.paa.grafos.Vertice;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
