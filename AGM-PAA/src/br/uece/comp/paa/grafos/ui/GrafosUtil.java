@@ -60,7 +60,7 @@ public class GrafosUtil<T>{
 
 		for(int i=0; i< vrtxs.size();i++){
 			
-			cells[i] = gutil.createCell((String) vrtxs.get(i).getInfo(),
+			cells[i] = gutil.createCell(vrtxs.get(i).getInfo().toString(),
 					new Rectangle2D.Double(vrtxs.get(i).getPosX(),vrtxs.get(i).getPosY(), 20, 20), false);
 		}
 		
