@@ -68,23 +68,27 @@ public class Prim<T> implements Iagm<T>{
 		Vertice<T> a , b ; 
 			
 		ArrayList<Vertice<T>> vertices =  grafo.getSubSet(pai);
+		Grafo<T> subgrafo = new Grafo<T>();
+		subgrafo.setVertices(vertices);
 		
-		for (Vertice<T> vertice : vertices) {
-			HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(vertice.getListAdj());
+		
+		HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(subgrafo.getArestas());
 			
-			while(!arestas.isVazio()){
-				HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-				Aresta<T> aresta = nohHeap.getInfo();
-				a = grafo.findSet(aresta.getA()); b = grafo.findSet(aresta.getB());
-				
-				if ((a.equals(pai) && !b.equals(pai)) || (!a.equals(pai) && b.equals(pai))) {
-					if (aresta.getPeso() < minimo) {
-						retorno = aresta;
-						break;
-					}
+		while (!arestas.isVazio()) {
+			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
+			Aresta<T> aresta = nohHeap.getInfo();
+			a = grafo.findSet(aresta.getA());
+			b = grafo.findSet(aresta.getB());
+
+			if ((a.equals(pai) && !b.equals(pai))
+					|| (!a.equals(pai) && b.equals(pai))) {
+				if (aresta.getPeso() < minimo) {
+					retorno = aresta;
+					break;
 				}
 			}
 		}
+		
 		
 		if(retorno != null)
 			grafo.union(retorno.getA(), retorno.getB());
