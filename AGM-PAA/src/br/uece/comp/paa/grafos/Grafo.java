@@ -34,6 +34,25 @@ public class Grafo <T>{
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
 	private int numAresta=0;
 	
+	
+	public  Vertice<T> findSet(Vertice<T> V){
+		return V.getPai();
+	}
+
+	public void makeSet(Vertice<T> V) {
+		V.setPai(V);
+	}
+	
+	public  void union(Vertice<T> v1 , Vertice<T> v2){
+		Vertice<T> vrtx = v2.getPai().clone();
+		for (Vertice<T> V : vertices) {
+			if(V.getPai().equals(vrtx.getPai()))
+				V.setPai(v1.getPai());
+		}
+		
+	}
+	
+	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
 		addElem(edg);
@@ -44,11 +63,9 @@ public class Grafo <T>{
 		Vertice<T> b = edg.getB();
 		if(!hasAresta(edg)){
 			int ia , ib;
-	
-			if(!hasVertice(a))
-				addElem(a);
-			if(!hasVertice(b))
-				addElem(b);
+			
+			addElem(a);
+			addElem(b);
 			
 			ia = getIdVertice(a);
 			ib = getIdVertice(b);
@@ -63,8 +80,9 @@ public class Grafo <T>{
 	}
 	
 	public void addElem(Vertice<T> vrtx){
-		if(!hasVertice(vrtx))
+		if(!hasVertice(vrtx)){
 			this.vertices.add(vrtx);
+		}
 	}
 	
 	public boolean hasVertice(Vertice<T> vrtx){
@@ -75,9 +93,6 @@ public class Grafo <T>{
 	}
 	
 	public boolean hasAresta(Aresta<T> edg){
-			Vertice<T> a = edg.getA(); 
-			Vertice<T> b = edg.getB();
-			
 		for (Vertice<T> V : vertices) {
 			for (Aresta<T> E : V.getListAdj()) {
 				if(E.equals(edg)) return true;
@@ -157,112 +172,12 @@ public class Grafo <T>{
 		for (Vertice<T> V : vertices) {
 			res +="\t"+V.toString()+"\n";
 		}
-		res += " ]";
+		res += "]";
 		return res;
 	}
 	
 	
-	public ArrayList<Grafo<T>> obterKAGMS()
-			throws CloneNotSupportedException {
-		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
-		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
-		ArrayList<Aresta<T>> arestasVisitadas = new ArrayList<Aresta<T>>();
-		DFS<T> dfs = new DFS<T>();
-		int contInterno = 1;
-		int contExterno = 1;
-		int numArestas = 7; // numero fornecido pelo arquivo.
-		Boolean noVertice = false;
-		Aresta<T> aresta = null;
-		for (int j = 0; j < arestasVisitadas.size()
-				|| arestasVisitadas.size() == 0; j++) {
-			for (int i = 0; i < numArestas; i++) {
-				System.out.println(i);
-				for (Aresta<T> aresta1 : arestas) {
-
-					this.deleteEdge((Aresta<T>) aresta1);
-
-				}
-				for (int n = 0; n < j; n++) {
-
-					this.deleteEdge((Aresta<T>) arestasVisitadas.get(n));
-
-				}
-				if (obterArestaMinima(this) == null) {
-					break;
-				}
-				
-				Aresta<T> aux =(Aresta<T>) obterArestaMinima(this); 
-				aresta = (Aresta<T>) aux.clone();
-
-				this.deleteEdge(aresta);
-
-				for (Aresta<T> aresta1 : arestas) {
-					this.addElem((Aresta<T>) aresta1);
-				}
-
-				arestas.add((Aresta<T>) aresta);
-
-				if (dfs.isConexo(this)) {
-					System.out.println("adicionou retirando  a aresta de peso:"
-							+ aresta.getPeso() + ", do vertice:"
-							+ aresta.getA().getInfo() + "--"
-							+ aresta.getB().getInfo());
-					
-					Kruskal kru = new Kruskal<T>(); 
-					grafos.add(kru.obterAGM((Grafo<T>) this.clone()));
-
-				} else
-					;
-
-			}
-			System.out.println("adicionando aresta superior");
-			if (arestasVisitadas.size() < 1) {
-				arestasVisitadas = (ArrayList<Aresta<T>>) arestas.clone();
-			}
-			arestas = new ArrayList<Aresta<T>>();
-		}
-		return grafos;
-	}
-
-	/**
-	 * @param grafo
-	 * @return
-	 */
-	private Object obterArestaMinima(Grafo<T> grafo) {
-		Aresta<T> retorno = null;
-		
-		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
-		ArrayList<Aresta<T>> edgs = grafo.getArestas();
-		
-		for (Aresta<T> E : edgs) {
-			arestas.inserir(E.getPeso(), E);
-		}
-		
-		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
-		// aresta com o peso mnimo.
-		while(!arestas.isVazio()){
-			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-			Aresta<T> edg;
-			try {
-				edg = (Aresta<T>) nohHeap.getInfo().clone();
-				boolean a,b;
-				a=grafo.hasVertice(edg.getA());
-				b=grafo.hasVertice(edg.getB());
-				if ((a || b) && !(a && b)) {
-					retorno = edg;
-					break;
-				}
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return retorno;
-	}
-	
-	 @Override
-     public Object clone() throws CloneNotSupportedException {
+     public Grafo<T> clone(){
             
              Grafo<T> grafoNovo = new Grafo<T>();
              Aresta<T> arestaNova = null;
@@ -280,23 +195,24 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
-		Grafo<String> grf = GrafosUtil.fileToGrafo("files/grafo.txt");
+		GrafosUtil<String> gutil = new GrafosUtil<String>();
+		Grafo<String> grf = gutil.fileToGrafo("files/grafo.txt");
+		Prim<String> kru = new Prim<String>();
+		gutil.telaGrafos(grf);
 		System.out.println(grf);
-		Boruvka<String> kru = new Boruvka<String>();
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		gutil.telaGrafos(kru.obterAGM(grf));
 		System.out.println(grf);
-		JGraph graph = GrafosUtil.desenhaGrafo(grf);
-		JFrame frame = new JFrame();
-		frame.getContentPane().add(new JScrollPane(graph));
-		frame.setBounds(10, 10, 500, 600);
-		frame.pack();
-		frame.setVisible(true);
 		
-	    JGraph graph2 = GrafosUtil.desenhaGrafo(kru.obterAGM(grf));
-		JFrame frame2 = new JFrame();
-		frame2.getContentPane().add(new JScrollPane(graph2));
-		frame2.setBounds(10, 10, 500, 600);
-		frame2.pack();
-		frame2.setVisible(true);
+	}
+
+	/**
+	 * @param vertices1
+	 */
+	public void addElem(ArrayList<Vertice<T>> vertices1) {
+		for (Vertice<T> vertice : vertices1) {
+			addElem(vertice);
+		}
 	}
 	
 }

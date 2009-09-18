@@ -64,10 +64,10 @@ public class Aresta<T>{
 			return false;
 	}
 	
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		Vertice<T> v1 = (Vertice<T>) A.clone();
-		Vertice<T> v2 = (Vertice<T>) B.clone();
+
+	public Aresta<T> clone(){
+		Vertice<T> v1 =  A.clone();
+		Vertice<T> v2 =  B.clone();
 		Aresta<T> cln = new Aresta<T>(v1,v2,peso);
 		return cln;
 	}

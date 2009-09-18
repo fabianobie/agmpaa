@@ -32,15 +32,10 @@ public class Boruvka<T> implements Iagm<T>{
 		
 		for(Vertice<T> V : grafo.getVertices()){
 		
-					try {
 						Grafo<T> grf = new Grafo<T>();
 						grf.addElem((Vertice<T>) V.clone());
 						listG.add(grf );
-						
-					} catch (CloneNotSupportedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+
 					
 				
 		}
@@ -55,12 +50,8 @@ public class Boruvka<T> implements Iagm<T>{
 			for (Grafo<T> G : listG) {
 				Aresta<T> edg = obterMinimo(G,grafo);
 				G.addElem(edg);
-				try {
 					result = (Grafo<T>) G.clone();
-				} catch (CloneNotSupportedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+
 			}
 		}
 		
@@ -92,7 +83,6 @@ public class Boruvka<T> implements Iagm<T>{
 		while(!arestas.isVazio()){
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
 			Aresta<T> edg;
-			try {
 				edg = (Aresta<T>) nohHeap.getInfo().clone();
 				boolean a,b;
 				a=subgrafo.hasVertice(edg.getA());
@@ -101,10 +91,7 @@ public class Boruvka<T> implements Iagm<T>{
 					retorno = edg;
 					break;
 				}
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		}
 
 		return retorno;

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultCellViewFactory;
@@ -25,6 +27,7 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
+import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
@@ -33,9 +36,9 @@ import br.uece.comp.paa.grafos.Vertice;
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  * 
  */
-public class GrafosUtil{
-
-	public static DefaultGraphCell createCell(String name, Rectangle2D bounds,
+public class GrafosUtil<T>{
+			
+	public  DefaultGraphCell createCell(T name, Rectangle2D bounds,
 			boolean raised) {
 		DefaultGraphCell cell = new DefaultGraphCell(name);
 		cell.addPort();
@@ -46,24 +49,26 @@ public class GrafosUtil{
 		return cell;
 	}
 	
-	public static JGraph desenhaGrafo(Grafo<String> G){
+	public  JGraph desenhaGrafo(Grafo<T> G){
 		GraphModel model = new DefaultGraphModel();
 		GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
 		JGraph graph = new JGraph(model, view);
-
-		ArrayList<Vertice<String>> vrtxs = G.getVertices();
+		GrafosUtil<String> gutil = new GrafosUtil<String>();
+		
+		ArrayList<Vertice<T>> vrtxs = G.getVertices();
 		DefaultGraphCell[] cells = new DefaultGraphCell[vrtxs.size()];
 
 		for(int i=0; i< vrtxs.size();i++){
-			cells[i] = GrafosUtil.createCell(vrtxs.get(i).getInfo(),
+			
+			cells[i] = gutil.createCell((String) vrtxs.get(i).getInfo(),
 					new Rectangle2D.Double(vrtxs.get(i).getPosX(),vrtxs.get(i).getPosY(), 20, 20), false);
 		}
 		
-		vrtxs = new ArrayList<Vertice<String>>();
+		vrtxs = new ArrayList<Vertice<T>>();
 		int i=0;
-		for (Vertice<String> V : G.getVertices()){
+		for (Vertice<T> V : G.getVertices()){
 			vrtxs.add(V);
-			for (Aresta<String> E : V.getListAdj()) {
+			for (Aresta<T> E : V.getListAdj()) {
 				boolean a,b;
 				a=vrtxs.contains(E.getA());
 				b=vrtxs.contains(E.getB());
@@ -82,7 +87,7 @@ public class GrafosUtil{
 					GraphConstants.setEndFill(edge.getAttributes(), true);
 					
 					graph.getGraphLayoutCache().insert(edge);	
-					System.out.println(E.getA()+"----"+E.getB());
+					//System.out.println(E.getA()+"----"+E.getB());
 				}
 			}
 		}
@@ -92,15 +97,15 @@ public class GrafosUtil{
 		return graph;
 	}
 	
-	private static int searchIdCell(Vertice<String> V, DefaultGraphCell[] cells){
+	private  int searchIdCell(Vertice<T> V, DefaultGraphCell[] cells){
 		for (int i=0 ; i< cells.length; i++) {
 			if(cells[i].toString().equals(V.getInfo())) return i;
 		}
 		return -1;
 	}
 	
-	public static Grafo<String> fileToGrafo(String nameFile) throws FileNotFoundException{
-		Grafo<String> G =  new Grafo<String>();
+	public  Grafo<T> fileToGrafo(String nameFile) throws FileNotFoundException{
+		Grafo<T> G =  new Grafo<T>();
 		File fgrafo = new File(nameFile);
 		Scanner scan  = new Scanner(fgrafo);
 		String nome =  scan.next();
@@ -111,13 +116,13 @@ public class GrafosUtil{
 		G.setNome(nome);
 		if(tipo==1){
 			for (int i = 0; i < numVertice; i++) {
-				Vertice<String> vrtx = new Vertice<String>(scan.next());
+				Vertice<T> vrtx = new Vertice<T>((T) scan.next());
 				vrtx.setPosX(Double.parseDouble(scan.next()));
 				vrtx.setPosY(Double.parseDouble(scan.next()));
 				G.addElem(vrtx);
 			}
 			for (int i = 0; i < numAresta; i++) {
-				Aresta<String> edg = new Aresta<String>(new Vertice<String>(scan.next()),new Vertice<String>(scan.next()),Double.parseDouble(scan.next()));
+				Aresta<T> edg = new Aresta<T>(new Vertice<T>((T) scan.next()),new Vertice<T>((T) scan.next()),Double.parseDouble(scan.next()));
 				G.addElem(edg);
 			}
 		}else if(tipo==0){
@@ -126,7 +131,7 @@ public class GrafosUtil{
 		return G;
 	}
 	
-	public static Double distancia(Vertice<String> V1 ,Vertice<String> V2) {
+	public  Double distancia(Vertice<T> V1 ,Vertice<T> V2) {
 		
 		double x = Math.abs(V1.getPosX() - V2.getPosX());
 		double y = Math.abs(V1.getPosY() - V2.getPosY());
@@ -138,4 +143,19 @@ public class GrafosUtil{
 		return d;
 	}
 	
+	public HeapFibonacci<Aresta<T>> arestaToHeap(ArrayList<Aresta<T>> arestas){
+		HeapFibonacci<Aresta<T>> heap = new HeapFibonacci<Aresta<T>>(); 
+			for (Aresta<T> aresta : arestas) {
+				heap.inserir(aresta.getPeso(), aresta);
+			}
+			return  heap;
+	}
+	
+	public void telaGrafos(Grafo<T> grafo){
+		JFrame frame = new JFrame();
+		frame.getContentPane().add(new JScrollPane(desenhaGrafo(grafo)));
+		frame.setBounds(10, 10, 500, 600);
+		frame.pack();
+		frame.setVisible(true);
+	}
 }
