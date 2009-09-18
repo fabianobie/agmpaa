@@ -49,7 +49,16 @@ public class Grafo <T>{
 			if(V.getPai().equals(vrtx.getPai()))
 				V.setPai(v1.getPai());
 		}
+	}
+	
+	public  ArrayList<Vertice<T>> getSubSet(Vertice<T> V ){
+		ArrayList<Vertice<T>> result = new ArrayList<Vertice<T>>();
 		
+		for (Vertice<T> v1 : vertices) {
+			if(v1.getPai().equals(V))
+				result.add(v1);
+		}
+		return result;
 	}
 	
 	
@@ -84,6 +93,16 @@ public class Grafo <T>{
 			this.vertices.add(vrtx);
 		}
 	}
+	
+	/**
+	 * @param vertices1
+	 */
+	public void addElem(ArrayList<Vertice<T>> vertices1) {
+		for (Vertice<T> vertice : vertices1) {
+			addElem(vertice);
+		}
+	}
+	
 	
 	public boolean hasVertice(Vertice<T> vrtx){
 		for (Vertice<T> V : vertices) {
@@ -206,13 +225,4 @@ public class Grafo <T>{
 		
 	}
 
-	/**
-	 * @param vertices1
-	 */
-	public void addElem(ArrayList<Vertice<T>> vertices1) {
-		for (Vertice<T> vertice : vertices1) {
-			addElem(vertice);
-		}
-	}
-	
 }

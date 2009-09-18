@@ -27,7 +27,7 @@ public class Kruskal<T>  implements Iagm<T>{
 	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
 	 */
 	@Override
-	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
+	public Grafo<T> obterAGM(Grafo<T> grafo)  {
 		
 		Grafo<T> result = new Grafo<T>();
 		ArrayList<Vertice<T>> vrtxs = grafo.getVertices();
