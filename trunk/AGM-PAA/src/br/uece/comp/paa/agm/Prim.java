@@ -21,6 +21,7 @@ import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
+import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 public class Prim<T> implements Iagm<T>{
 /*
@@ -30,64 +31,34 @@ public class Prim<T> implements Iagm<T>{
 	@Override
 	public Grafo<T> obterAGM(Grafo<T> grafo){
 
-		int numElementos = grafo.getVertices().size();
+
 		Grafo<T> retorno = new Grafo<T>();
-		Vertice<T> a1 = null;
-		Vertice<T> b1 = null;
-		Vertice inicial = grafo.getVertices().get(0);
-
-		// Array para guardar os vrtices adicionados
+		Vertice<T> inicial = grafo.getVertices().get(0);
 		ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
-		// Array para guardar as arestas que sero adicionadas ao final.
-		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		vertices.add(inicial);
-		Aresta<T> aresta;
+		retorno.addElem(inicial.clone());
+		
 
-		// A cada iterao o programa testa se j temos todos os vrtices
-		// adicionados
-		while (vertices.size() < numElementos) {
+		while (grafo.getVertices().size() >= retorno.getVertices().size()) {
 
-			// Trecho para mostrar na tela os passos da escolha do mnimo
-			for (int i = 0; i < vertices.size(); i++) {
-				System.out.print("\t" + vertices.get(i).getInfo() + "("
-						+ vertices.get(i).getListAdj().size() + ")");
-			}
-			
 			Grafo<T> subgrafo = new Grafo<T>();
 			subgrafo.setVertices(vertices);
-			
-			aresta = obterMinimo(subgrafo, grafo);
-			// Neste trecho o algoritmo j retorna o resultado parcial caso o
-			// grafo seja desconexo
+			Aresta<T> aresta = obterMinimo(subgrafo, grafo);
+
 			if (aresta == null) {
 				return retorno;
-			}
-			// O mnimo a cada iterao para visualizar os mnimos encontrados
-			System.out.println("Peso mnimo:" + aresta.getPeso());
-			//a1 = new Vertice<T>(aresta.getA().getInfo());
-			///b1 = new Vertice<T>(aresta.getB().getInfo());
-
-			// Sempre que  encontrada a aresta mnima do array de vrtices
-			// adicionados  adicionada ela  adicionada ao retorno do mtodo
-
-			try {
-				arestas.add((Aresta<T>) aresta.clone());
-				retorno.addElem((Aresta<T>) aresta.clone());
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-
-			// O trecho testa qual aresta ser adicionada a lista de vrtices
-			if (vertices.contains(aresta.getA())) {
-				vertices.add(aresta.getB());
 			} else {
-				vertices.add(aresta.getA());
+				retorno.addElem(aresta.clone());
+				if (vertices.contains(aresta.getA()))
+					vertices.add(aresta.getB());
+				else
+					vertices.add(aresta.getA());
 			}
-
 		}
+		
 		return retorno;
+		
+		
 	}
 
 	/**
@@ -99,38 +70,27 @@ public class Prim<T> implements Iagm<T>{
 	 */
 	public Aresta<T> obterMinimo(Grafo<T> subgrafo, Grafo<T> grafo) {
 		Aresta<T> retorno = null;
-		
-		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
-		ArrayList<Aresta<T>> edgs = grafo.getArestas();
-		
-		for (Aresta<T> E : edgs) {
-			arestas.inserir(E.getPeso(), E);
-		}
-		
-		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
-		// aresta com o peso mnimo.
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(grafo.getArestas()); 
+
 		while(!arestas.isVazio()){
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-			Aresta<T> edg;
-			try {
-				edg = (Aresta<T>) nohHeap.getInfo().clone();
-				boolean a,b;
-				a=subgrafo.hasVertice(edg.getA());
-				b=subgrafo.hasVertice(edg.getB());
-				if ((a || b) && !(a && b)) {
+			Aresta<T> edg =  nohHeap.getInfo();
+			
+			boolean a,b;
+			a=subgrafo.hasVertice(edg.getA());
+			b=subgrafo.hasVertice(edg.getB());
+				if ((a && !b) || (!a && b)) {
 					retorno = edg;
 					break;
 				}
-			} catch (CloneNotSupportedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	
 		}
 
 		return retorno;
 
 	}
-/*
+
 	public static void main(String[] args) throws CloneNotSupportedException {
 		Grafo<Integer> grafo = new Grafo<Integer>();
 		Vertice<Integer> a = new Vertice<Integer>(1);
@@ -177,5 +137,5 @@ public class Prim<T> implements Iagm<T>{
 		System.out.println(prim.obterAGM(grafo));
 
 	}
-*/
+
 }

@@ -19,7 +19,16 @@ public class Vertice<T>{
 	private Double posX;
 	private Double posY;
 	private ArrayList<Aresta<T>> listAdj = new ArrayList<Aresta<T>>();
+	private Vertice<T> pai = this;
 	
+	public Vertice<T> getPai() {
+		return pai;
+	}
+
+	public void setPai(Vertice<T> pai) {
+		this.pai = pai;
+	}
+
 	/**
 	 * @param string
 	 * @param i
@@ -90,7 +99,7 @@ public class Vertice<T>{
 	
 	@Override
 	public String toString() {
-		String res =  "V [info=" + info + ", listAdj=[";
+		String res =  "V [info=" + info + ",Pai="+pai.info+" listAdj=[";
 		for (Aresta<T> e : listAdj) {
 			res += e.toString();
 		}
@@ -98,11 +107,12 @@ public class Vertice<T>{
 		return res;
 	}
 
-	@Override
-	public Object clone() throws CloneNotSupportedException {
+
+	public Vertice<T> clone(){
 		Vertice<T> cln = new Vertice<T>(info);
 		cln.posX = posX;
 		cln.posY = posY;
+		cln.pai = pai;
 		return cln;
 	}
 	

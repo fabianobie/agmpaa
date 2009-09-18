@@ -15,6 +15,7 @@ import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
+import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -27,39 +28,25 @@ public class Kruskal<T>  implements Iagm<T>{
 	 */
 	@Override
 	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
-		Grafo<T> result = new Grafo<T>();
-		result.setNome(grafo.getNome()+"_MINIMO");
 		
-		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>(); 
-
-		ArrayList<Vertice<T>> vrtxs = new ArrayList<Vertice<T>>();
-		for (Vertice<T> V : grafo.getVertices()){
-			vrtxs.add(V);
-			for (Aresta<T> E : V.getListAdj()) {
-				boolean a,b;
-				a=vrtxs.contains(E.getA());
-				b=vrtxs.contains(E.getB());
-				if (!(a && b) || (!a && b) || (a && !b)) {
-					arestas.inserir(E.getPeso(), E);
-				}
-			}
+		Grafo<T> result = new Grafo<T>();
+		ArrayList<Vertice<T>> vrtxs = grafo.getVertices();
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		
+		for (Vertice<T> vertice : vrtxs) {
+			grafo.makeSet(vertice);
 		}
 		
-		DFS<T> dfs = new DFS<T>(); 
+		HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(grafo.getArestas()); 
+		
 		
 		while(!arestas.isVazio()){
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-			Aresta<T> edg;
-			try {
-				edg = (Aresta<T>) nohHeap.getInfo().clone();
-				if(!result.hasVertice(edg.getA()) || !result.hasVertice(edg.getB()))
-					result.addElem(edg);
+			Aresta<T> edg =  nohHeap.getInfo();
 				
-				if(dfs.isConexo(result) && (result.getVertices().size()==grafo.getVertices().size()))
-					return result;
-			} catch (CloneNotSupportedException e) {
-				System.out.println("Erro de Clonagem: KRUSKAL");
-				e.printStackTrace();
+			if(!grafo.findSet(edg.getA()).equals(grafo.findSet(edg.getB()))){
+					result.addElem(edg.clone());
+					grafo.union(edg.getA(), edg.getB());
 			}
 		}
 		
