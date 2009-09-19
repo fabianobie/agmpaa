@@ -15,6 +15,7 @@ import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
+import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -30,19 +31,13 @@ public class Boruvka<T> implements Iagm<T>{
 		ArrayList<Grafo<T>> listG = new ArrayList<Grafo<T>>();
 		Grafo<T> result = new Grafo<T>();
 		
-		for(Vertice<T> V : grafo.getVertices()){
-		
+		for(Vertice<T> V : grafo.getVertices()){	
 						Grafo<T> grf = new Grafo<T>();
 						grf.addElem((Vertice<T>) V.clone());
 						listG.add(grf );
-
-					
-				
 		}
 		
 		result.setNome(grafo.getNome()+"_MINIMO");
-		
-		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>(); 
 		
 		DFS<T> dfs = new DFS<T>();
 		

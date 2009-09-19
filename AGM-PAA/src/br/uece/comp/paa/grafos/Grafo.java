@@ -156,6 +156,8 @@ public class Grafo <T>{
 			int ib = getIdVertice(b);
 			Vertice<T> v2 = vertices.get(ib);
 			v2.getListAdj().remove(v2.getIdAresta(edg));
+			if(v1.getListAdj().isEmpty()) vertices.remove(v1);
+			if(v2.getListAdj().isEmpty()) vertices.remove(v2);
 			numAresta--;
 		}
 	}
@@ -216,13 +218,13 @@ public class Grafo <T>{
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
 		GrafosUtil<String> gutil = new GrafosUtil<String>();
 		Grafo<String> grf = gutil.fileToGrafo("files/grafo.txt");
-		Prim<String> kru = new Prim<String>();
+		Kruskal<String> kru = new Kruskal<String>();
 		gutil.telaGrafos(grf);
 		System.out.println(grf);
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		gutil.telaGrafos(kru.obterAGM(grf));
+		System.out.println("-----------------------------------------------");
+		gutil.telaGrafos(kru.obterAGM(grf, 2, 20.0));
 		System.out.println(grf);
-		
+
 	}
 
 }
