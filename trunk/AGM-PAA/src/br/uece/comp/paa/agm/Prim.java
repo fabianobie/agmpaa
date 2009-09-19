@@ -28,6 +28,7 @@ public class Prim<T> implements Iagm<T>{
  * (non-Javadoc)
  * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
  */
+
 	@Override
 	public Grafo<T> obterAGM(Grafo<T> grafo){
 
@@ -46,7 +47,7 @@ public class Prim<T> implements Iagm<T>{
 			Aresta<T> aresta = obterMinimo(pai, grafo);		
 			if (aresta == null) break;
 			pai = aresta.getA().getPai();
-			retorno.addElem(aresta.clone());	
+			retorno.addElem(aresta.clone());
 		}
 		
 		return retorno;
@@ -95,5 +96,4 @@ public class Prim<T> implements Iagm<T>{
 		
 		return retorno;
 	}
-
 }
