@@ -28,13 +28,14 @@ public class Kruskal<T>  implements Iagm<T>{
 	private Boolean rdmax =  false;
 	private Double dMax;
 	
+	private Grafo<T> result = new Grafo<T>();
+	
 	/* (non-Javadoc)
 	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
 	 */
 	@Override
 	public Grafo<T> obterAGM(Grafo<T> grafo)  {
 		
-		Grafo<T> result = new Grafo<T>();
 		ArrayList<Vertice<T>> vrtxs = grafo.getVertices();
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		
