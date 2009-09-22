@@ -30,7 +30,7 @@ public class Prim<T> implements Iagm<T>{
     private Boolean rdmax =  false;
     private Double dMax;
   
-    private Grafo<T> result= new Grafo<T>();
+    private Grafo<T> result;
   
 /*
 * (non-Javadoc)
@@ -38,6 +38,7 @@ public class Prim<T> implements Iagm<T>{
 */
 
     public Grafo<T> obterAGM(Grafo<T> grafo){
+    	    result= new Grafo<T>();
             Vertice<T> inicial = grafo.getVertices().get(0);
             result.addElem(inicial.clone());
           
@@ -109,52 +110,6 @@ public class Prim<T> implements Iagm<T>{
           
             return retorno;
     }
-  
-
-    public Aresta<T> obterMinimoGrafo( Grafo<T> grafo) {
-        if(grafo.getVertices().size()<1){
-            return null;
-        }
-        Vertice<T> inicial = grafo.getVertices().get(0);
-        Vertice<T> pai = inicial.getPai();
-       
-        Aresta<T> retorno = null;
-        GrafosUtil<T> gutil = new GrafosUtil<T>();
-        Double minimo = Double.MAX_VALUE;
-        Vertice<T> a , b ;
-              
-        ArrayList<Vertice<T>> vertices =  grafo.getSubSet(pai);
-        Grafo<T> subgrafo = new Grafo<T>();
-        subgrafo.setVertices(vertices);
-      
-      
-        HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(subgrafo.getArestas());
-              
-        while (!arestas.isVazio()) {
-                HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-                Aresta<T> aresta = nohHeap.getInfo();
-                a = grafo.findSet(aresta.getA());
-                b = grafo.findSet(aresta.getB());
-
-              
-                        if (aresta.getPeso() < minimo) {
-                                if(restricaoDeGrau(grafo, aresta)){
-                                        if(restricaoDeDmax(grafo, aresta)){
-                                                retorno = aresta;
-                                                break;
-                                        }
-                                }
-                        }
-                }
-       
-      
-      
-        if(retorno != null)
-                grafo.union(retorno.getA(), retorno.getB());
-      
-        return retorno;
-}
-   
    
     public Grafo<T> obterAGM(Grafo<T> grafo ,int grau , Double distMax)  {
             if (grau >= 2) {
@@ -215,37 +170,75 @@ public class Prim<T> implements Iagm<T>{
                     return true;
             }
     }
+    
+    /*
+    public Aresta<T> obterMinimoGrafo( Grafo<T> grafo) {
+        if(grafo.getVertices().size()<1){
+            return null;
+        }
+        Vertice<T> inicial = grafo.getVertices().get(0);
+        Vertice<T> pai = inicial.getPai();
+       
+        Aresta<T> retorno = null;
+        GrafosUtil<T> gutil = new GrafosUtil<T>();
+        Double minimo = Double.MAX_VALUE;
+              
+        ArrayList<Vertice<T>> vertices =  grafo.getSubSet(pai);
+        Grafo<T> subgrafo = new Grafo<T>();
+        subgrafo.setVertices(vertices);
+      
+      
+        HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(subgrafo.getArestas());
+              
+        while (!arestas.isVazio()) {
+                HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
+                Aresta<T> aresta = nohHeap.getInfo();
+                a = grafo.findSet(aresta.getA());
+                b = grafo.findSet(aresta.getB());
 
+              
+                        if (aresta.getPeso() < minimo) {
+                                if(restricaoDeGrau(grafo, aresta)){
+                                        if(restricaoDeDmax(grafo, aresta)){
+                                                retorno = aresta;
+                                                break;
+                                        }
+                                }
+                        }
+                }
+       
+      
+      
+        if(retorno != null)
+                grafo.union(retorno.getA(), retorno.getB());
+      
+        return retorno;
+}
+ */ 
 
     public Boolean getRgrau() {
             return rgrau;
     }
 
-
     public void setRgrau(Boolean rgrau) {
             this.rgrau = rgrau;
     }
-
 
     public int getGrauMax() {
             return grauMax;
     }
 
-
     public void setGrauMax(int grauMax) {
             this.grauMax = grauMax;
     }
-
 
     public Boolean getRdmax() {
             return rdmax;
     }
 
-
     public void setRdmax(Boolean rdmax) {
             this.rdmax = rdmax;
     }
-
 
 
     public Double getdMax() {
@@ -257,73 +250,10 @@ public class Prim<T> implements Iagm<T>{
             this.dMax = dMax;
     }
 
-    
-	public ArrayList<Grafo<T>> obterKAGMS(Grafo<T> grafo , int K)
-			throws CloneNotSupportedException {
-		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
-		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
-		ArrayList<Aresta<T>> arestasVisitadas = new ArrayList<Aresta<T>>();
-		DFS<T> dfs = new DFS<T>();
-		int numVertices = grafo.getVertices().size();
-		int numArestas = 7; // numero fornecido pelo arquivo.
-		Aresta<T> aresta = null;
-		for (int j = 0; j < arestasVisitadas.size()
-				|| arestasVisitadas.size() == 0 ; j++) {
-			for (int i = 0; i < numArestas; i++) {
-				System.out.println(i);
-				for (Aresta<T> aresta1 : arestas) {
-
-					grafo.deleteEdge((Aresta<T>) aresta1.clone());
-
-				}
-				for (int n = 0; n < j; n++) {
-
-					grafo.deleteEdge((Aresta<T>) arestasVisitadas.get(n)
-							.clone());
-
-				}
-				if (obterMinimoGrafo(grafo) == null) {
-					break;
-				}
-
-				aresta = (Aresta<T>) obterMinimoGrafo(grafo).clone();
-
-				grafo.deleteEdge(aresta);
-
-				for (Aresta<T> aresta1 : arestas) {
-					grafo.addElem((Aresta<T>) aresta1.clone());
-
-				}
-
-				arestas.add((Aresta<T>) aresta.clone());
-
-				if (dfs.isConexo(grafo)
-						&& grafo.getVertices().size() >= numVertices) {
-					System.out.println("adicionou retirando  a aresta de peso:"
-							+ aresta.getPeso() + ", do vertice:"
-							+ aresta.getA().getInfo() + "--"
-							+ aresta.getB().getInfo());
-					Grafo<T> novoGrafo = obterAGM((Grafo<T>) grafo).clone();
-					if (!grafos.contains(novoGrafo)) {
-						grafos.add(novoGrafo);
-					}
-					result = new Grafo<T>();
-
-				} else;
-
-			}
-			System.out.println("adicionando aresta superior");
-			if (arestasVisitadas.size() < 1) {
-				arestasVisitadas = (ArrayList<Aresta<T>>) arestas.clone();
-			}
-			arestas = new ArrayList<Aresta<T>>();
-		}
-		return grafos;
-	}
    
-       
+   
 
-        public static void main(String[] args) throws CloneNotSupportedException {
+	public static void main(String[] args) throws CloneNotSupportedException {
                 Grafo<Integer> grafo = new Grafo<Integer>();
                 Vertice<Integer> a = new Vertice<Integer>(1);
                 Vertice<Integer> b = new Vertice<Integer>(2);
@@ -368,13 +298,10 @@ public class Prim<T> implements Iagm<T>{
                 
                 System.out.println(grafo);
                int k =1;
-                for(Grafo<Integer> grafo1 : prim.obterKAGMS(grafo,5)){
-                    //System.out.println("tamanho:"+prim.obterKAGMS(grafo).size());
+                for(Grafo<Integer> grafo1 : grafo.obterKAGMS()){
                     System.out.println("grafo  "+ (k++)+"\n"+grafo1);
                    
                 }
-                //System.out.println(kru.obterAGM(grafo));
-              //  System.out.println(prim.obterAGM(grafo));
 
         }
 
