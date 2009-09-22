@@ -61,6 +61,49 @@ public class Grafo <T>{
 		return result;
 	}
 	
+	public ArrayList<Grafo<T>> obterKAGMS()
+			throws CloneNotSupportedException {
+
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+		HeapFibonacci<Aresta<T>> hfarestas = gutil.arestaToHeap(this.getArestas());
+		ArrayList<Aresta<T>> arestas = gutil.heapToAresta(hfarestas);
+		Kruskal<T> kru = new Kruskal<T>();
+		Grafo<T> gmin;
+		
+		gmin = kru.obterAGM(this);
+
+		grafos.add(gmin.clone());
+
+		HeapFibonacci<Aresta<T>> heapMin = gutil
+				.arestaToHeap(gmin.getArestas());
+		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
+
+		for (int i = arestasMin.size() - 1; i >= 0; i--) {
+			Aresta<T> arestaMax = arestasMin.get(i);
+			gmin.deleteEdge(arestaMax);
+
+			for (int j = arestas.indexOf(arestaMax) + 1; j < arestas.size(); j++) {
+
+				Aresta<T> edg = arestas.get(j);
+				boolean a, b;
+				a = gmin.hasVertice(edg.getA());
+				b = gmin.hasVertice(edg.getB());
+
+				if ((a || b) && !(a && b)) {
+					gmin.addElem(edg.clone());
+					grafos.add(gmin.clone());
+					gmin.deleteEdge(edg.clone());
+					break;
+				}
+
+			}
+
+			gmin.addElem(arestaMax);
+		}
+		return grafos;
+	}
+	
 	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
@@ -161,6 +204,15 @@ public class Grafo <T>{
 			numAresta--;
 		}
 	}
+	
+	public Double getPesoTotal() {
+		ArrayList<Aresta<T>> arestas = getArestas();
+		Double pesoTotal = 0.0;
+		for (Aresta<T> aresta : arestas) {
+			pesoTotal += aresta.getPeso();
+		}
+		return pesoTotal;
+	}
 
 	public ArrayList<Vertice<T>> getVertices() {
 		return vertices;
@@ -216,14 +268,23 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
-		GrafosUtil<String> gutil = new GrafosUtil<String>();
-		Grafo<String> grf = gutil.fileToGrafo("files/grafo.txt");
-		Kruskal<String> kru = new Kruskal<String>();
-		gutil.telaGrafos(grf);
-		System.out.println(grf);
-		System.out.println("-----------------------------------------------");
-		gutil.telaGrafos(kru.obterAGM(grf, 2, 20.0));
-		System.out.println(grf);
+		
+		for (int i = 1; i <= 4; i++) {
+			GrafosUtil<String> gutil = new GrafosUtil<String>();
+			Grafo<String> grf = gutil.fileToGrafo("files/grafo" + i + ".txt");
+
+			System.out.println(grf);
+			gutil.telaGrafos(grf);
+			int k = 1;
+
+			for (Grafo<String> grafo : grf.obterKAGMS()) {
+				System.out.println("grafo " + k++ + " "
+						+ (grafo.getPesoTotal()) + "->"
+						+ grafo.getVertices().size() + " \n");
+				gutil.telaGrafos(grafo);
+
+			}
+        }
 
 	}
 
