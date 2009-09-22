@@ -28,6 +28,7 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
 import br.uece.comp.paa.estruturas.HeapFibonacci;
+import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
@@ -61,7 +62,7 @@ public class GrafosUtil<T>{
 		for(int i=0; i< vrtxs.size();i++){
 			
 			cells[i] = gutil.createCell(vrtxs.get(i).getInfo().toString(),
-					new Rectangle2D.Double(vrtxs.get(i).getPosX(),vrtxs.get(i).getPosY(), 20, 20), false);
+					new Rectangle2D.Double(vrtxs.get(i).getPosX(),vrtxs.get(i).getPosY(), 50, 20), false);
 		}
 		
 		vrtxs = new ArrayList<Vertice<T>>();
@@ -126,6 +127,8 @@ public class GrafosUtil<T>{
 				G.addElem(edg);
 			}
 		}else if(tipo==0){
+			//TODO  ler arquivo e calcular as distancias dos vertices
+		}else{
 			System.out.println("Erro de Formato: leitura ainda nao implementada");
 		}
 		return G;
@@ -149,6 +152,17 @@ public class GrafosUtil<T>{
 				heap.inserir(aresta.getPeso(), aresta);
 			}
 			return  heap;
+	}
+	
+	public ArrayList<Aresta<T>> heapToAresta(HeapFibonacci<Aresta<T>> heap){
+		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
+		
+			while (!heap.isVazio()) {
+				HeapFibonacciNoh<Aresta<T>> nohHeap = heap.extrairMin();
+				Aresta<T> edg =  nohHeap.getInfo();
+				arestas.add(edg);
+			}
+		return  arestas;
 	}
 	
 	public void telaGrafos(Grafo<T> grafo){
