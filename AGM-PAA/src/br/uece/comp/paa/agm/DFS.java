@@ -69,12 +69,13 @@ public class DFS<T> {
 		}
 		// Trecho para apresentar a lista de vrtices e um ndice se ele foi
 		// visitado(indice 1) ou no foi visitado(indice 0)
-		System.out.println("\nResultado final da busca(Vrtices visitados):");
+		/*System.out.println("\nResultado final da busca(Vrtices visitados):");
 		for (int i = 0; i < grafoDFS.getVertices().size(); i++) {
 			System.out.print("\t"
 					+ indices.get(grafoDFS.getVertices().get(i).getInfo())
 					+ "(" + grafoDFS.getVertices().get(i).getInfo() + ")");
 		}
+		*/
 		
 		if (conexo) {
 
