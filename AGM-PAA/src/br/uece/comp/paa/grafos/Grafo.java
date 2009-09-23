@@ -10,7 +10,6 @@ package br.uece.comp.paa.grafos;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import br.uece.comp.paa.agm.DFS;
 import br.uece.comp.paa.agm.Kruskal;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
@@ -69,6 +68,7 @@ public class Grafo <T>{
 		
 
 		for (int i = arestasMin.size() - 1; i >= 0; i--) {
+		
 			
 			Aresta<T> arestaMax = arestasMin.get(i);
 			gtemp.deleteEdge(arestaMax);
@@ -304,17 +304,17 @@ public class Grafo <T>{
 		
 		//for (int i = 1; i <= 4; i++) {
 			GrafosUtil<String> gutil = new GrafosUtil<String>();
-			Grafo<String> grf = gutil.fileToGrafo("files/grafo3.txt");
+			Grafo<String> grf = gutil.fileToGrafo("files/grafo1.txt");
 
 			System.out.println(grf);
-			gutil.telaGrafos(grf);
+			//gutil.telaGrafos(grf);
 			int k = 1;
 
 			for (Grafo<String> grafo : grf.obterKAGMS()) {
 				System.out.println("grafo " + k++ + " "
 						+ (grafo.getPesoTotal()) + "->"
 						+ grafo.getVertices().size() + " \n");
-				gutil.telaGrafos(grafo);
+				//gutil.telaGrafos(grafo);
 
 			}
        // }
