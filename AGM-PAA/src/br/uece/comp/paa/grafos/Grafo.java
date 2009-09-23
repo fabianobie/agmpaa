@@ -9,19 +9,10 @@ package br.uece.comp.paa.grafos;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-
-import org.jgraph.JGraph;
-
-import br.uece.comp.paa.agm.Boruvka;
 import br.uece.comp.paa.agm.DFS;
 import br.uece.comp.paa.agm.Kruskal;
-import br.uece.comp.paa.agm.Prim;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
-import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
 /**
@@ -61,6 +52,39 @@ public class Grafo <T>{
 		return result;
 	}
 	
+	public ArrayList<Grafo<T>> obterKAGMS(){
+
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+		Kruskal<T> kru = new Kruskal<T>();
+		Grafo<T> gtemp = this.clone();
+		Grafo<T> gmin;
+		
+		gmin = kru.obterAGM(gtemp);
+
+		grafos.add(gmin.clone());
+		
+		HeapFibonacci<Aresta<T>> heapMin = gutil.arestaToHeap(gmin.getArestas());
+		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
+		
+
+		for (int i = arestasMin.size() - 1; i >= 0; i--) {
+			
+			Aresta<T> arestaMax = arestasMin.get(i);
+			gtemp.deleteEdge(arestaMax);
+			
+			gmin = kru.obterAGM(gtemp);
+			
+			grafos.add(gmin.clone());
+			
+			gtemp.addElem(arestaMax);
+			
+		}
+		return grafos;
+	}
+	
+	
+/*	
 	public ArrayList<Grafo<T>> obterKAGMS()
 			throws CloneNotSupportedException {
 
@@ -69,6 +93,7 @@ public class Grafo <T>{
 		HeapFibonacci<Aresta<T>> hfarestas = gutil.arestaToHeap(this.getArestas());
 		ArrayList<Aresta<T>> arestas = gutil.heapToAresta(hfarestas);
 		Kruskal<T> kru = new Kruskal<T>();
+		DFS<T> dfs = new DFS<T>();
 		Grafo<T> gmin;
 		
 		gmin = kru.obterAGM(this);
@@ -90,11 +115,19 @@ public class Grafo <T>{
 				a = gmin.hasVertice(edg.getA());
 				b = gmin.hasVertice(edg.getB());
 
-				if ((a || b) && !(a && b)) {
-					gmin.addElem(edg.clone());
-					grafos.add(gmin.clone());
-					gmin.deleteEdge(edg.clone());
-					break;
+				if ((a || b)) {
+					
+					if(!gmin.hasAresta(edg)){	
+						gmin.addElem(edg.clone());
+						
+						if(dfs.isConexo(gmin) && (this.getVertices().size() == gmin.getVertices().size())){
+							grafos.add(gmin.clone());
+							gmin.deleteEdge(edg.clone());
+							break;
+						}
+						
+						gmin.deleteEdge(edg.clone());
+					}
 				}
 
 			}
@@ -104,7 +137,7 @@ public class Grafo <T>{
 		return grafos;
 	}
 	
-	
+*/	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
 		addElem(edg);
@@ -269,9 +302,9 @@ public class Grafo <T>{
 	 */
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
 		
-		for (int i = 1; i <= 4; i++) {
+		//for (int i = 1; i <= 4; i++) {
 			GrafosUtil<String> gutil = new GrafosUtil<String>();
-			Grafo<String> grf = gutil.fileToGrafo("files/grafo" + i + ".txt");
+			Grafo<String> grf = gutil.fileToGrafo("files/grafo3.txt");
 
 			System.out.println(grf);
 			gutil.telaGrafos(grf);
@@ -284,8 +317,9 @@ public class Grafo <T>{
 				gutil.telaGrafos(grafo);
 
 			}
-        }
+       // }
 
 	}
 
 }
+
