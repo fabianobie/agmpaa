@@ -10,7 +10,9 @@ package br.uece.comp.paa.grafos;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import br.uece.comp.paa.agm.DFS;
 import br.uece.comp.paa.agm.Kruskal;
+import br.uece.comp.paa.agm.Prim;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
@@ -52,65 +54,98 @@ public class Grafo <T>{
 	}
 	
 	public ArrayList<Grafo<T>> obterKAGMS(){
-
-		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		
 		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
 		Kruskal<T> kru = new Kruskal<T>();
 		Grafo<T> gtemp = this.clone();
-		Grafo<T> gmin;
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		
-		gmin = kru.obterAGM(gtemp);
-
+		Grafo<T> gmin = kru.obterAGM(gtemp);
 		grafos.add(gmin.clone());
+		gutil.telaGrafos(gmin.clone());
 		
+		listAGM(grafos , gtemp, gmin); 
+		
+		return grafos;
+	}
+
+	private void listAGM(ArrayList<Grafo<T>> grafos, Grafo<T> gtemp, Grafo<T> gmin){
+		Kruskal<T> kru = new Kruskal<T>();
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		HeapFibonacci<Aresta<T>> heapMin = gutil.arestaToHeap(gmin.getArestas());
 		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
 		
-
+		if(gtemp.getArestas().size() == getArestas().size() - (getVertices().size()-2)) return;
+			
 		for (int i = arestasMin.size() - 1; i >= 0; i--) {
 		
-			
 			Aresta<T> arestaMax = arestasMin.get(i);
 			gtemp.deleteEdge(arestaMax);
-			
 			gmin = kru.obterAGM(gtemp);
+			if(gmin.getVertices().size()==getVertices().size() &&  !gutil.hasGrafo(grafos,gmin)){
+				grafos.add(gmin.clone());
+				gutil.telaGrafos(gmin.clone());
+				listAGM(grafos, gtemp, gmin);
+				gtemp.addElem(arestaMax);
+			}else{
+				
+				return;
+			}
 			
-			grafos.add(gmin.clone());
-			
-			gtemp.addElem(arestaMax);
 			
 		}
-		return grafos;
+		return;
 	}
 	
 	
-/*	
+	
+/*
 	public ArrayList<Grafo<T>> obterKAGMS()
 			throws CloneNotSupportedException {
 
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+		ArrayList<Grafo<T>> grafos2 = new ArrayList<Grafo<T>>();
 		HeapFibonacci<Aresta<T>> hfarestas = gutil.arestaToHeap(this.getArestas());
 		ArrayList<Aresta<T>> arestas = gutil.heapToAresta(hfarestas);
 		Kruskal<T> kru = new Kruskal<T>();
-		DFS<T> dfs = new DFS<T>();
 		Grafo<T> gmin;
 		
 		gmin = kru.obterAGM(this);
-
+		
 		grafos.add(gmin.clone());
+		
+		for (Grafo<T> grafo1 : listaAGM( arestas, gmin)) {
+			grafos.add(grafo1.clone());
+		}
+		
+		for (Grafo<T> grafo2 : grafos) {
+			grafos2 = listaAGM( arestas, grafo2);
+		}
+		
+		for (Grafo<T> grafo1 : grafos2) {
+			grafos.add(grafo1);
+		}
+		
+		return grafos;
+	}
 
+	/*private ArrayList<Grafo<T>> listaAGM(ArrayList<Aresta<T>> arestas, Grafo<T> gmin) {
+		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		DFS<T> dfs = new DFS<T>();
 		HeapFibonacci<Aresta<T>> heapMin = gutil
 				.arestaToHeap(gmin.getArestas());
 		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
-
+		
 		for (int i = arestasMin.size() - 1; i >= 0; i--) {
 			Aresta<T> arestaMax = arestasMin.get(i);
 			gmin.deleteEdge(arestaMax);
 
-			for (int j = arestas.indexOf(arestaMax) + 1; j < arestas.size(); j++) {
-
+			for (int j = 0 ; j < arestas.size(); j++) {
+				
 				Aresta<T> edg = arestas.get(j);
+				if(!edg.equals(arestaMax)){
 				boolean a, b;
 				a = gmin.hasVertice(edg.getA());
 				b = gmin.hasVertice(edg.getB());
@@ -123,21 +158,21 @@ public class Grafo <T>{
 						if(dfs.isConexo(gmin) && (this.getVertices().size() == gmin.getVertices().size())){
 							grafos.add(gmin.clone());
 							gmin.deleteEdge(edg.clone());
-							break;
+							//break;
 						}
 						
 						gmin.deleteEdge(edg.clone());
 					}
 				}
-
+				}
 			}
-
+			
 			gmin.addElem(arestaMax);
 		}
 		return grafos;
 	}
+	*/
 	
-*/	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
 		addElem(edg);
@@ -282,7 +317,16 @@ public class Grafo <T>{
 		return res;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		Grafo<T> grafo = (Grafo<T>) obj;
+		for (Aresta<T> aresta : grafo.getArestas()) {
+			if(!this.hasAresta(aresta)) return false;
+		}
+		return true;
+	}
 	
+	@Override
      public Grafo<T> clone(){
             
              Grafo<T> grafoNovo = new Grafo<T>();
@@ -315,7 +359,6 @@ public class Grafo <T>{
 						+ (grafo.getPesoTotal()) + "->"
 						+ grafo.getVertices().size() + " \n");
 				//gutil.telaGrafos(grafo);
-
 			}
        // }
 
