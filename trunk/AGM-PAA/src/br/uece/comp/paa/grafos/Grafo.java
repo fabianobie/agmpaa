@@ -53,7 +53,7 @@ public class Grafo <T>{
 		return result;
 	}
 	
-	public ArrayList<Grafo<T>> obterKAGMS(){
+/*	public ArrayList<Grafo<T>> obterKAGMS(){
 		
 		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
 		Kruskal<T> kru = new Kruskal<T>();
@@ -96,46 +96,38 @@ public class Grafo <T>{
 		}
 		return;
 	}
+	*/
 	
 	
-	
-/*
+
 	public ArrayList<Grafo<T>> obterKAGMS()
 			throws CloneNotSupportedException {
 
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
-		ArrayList<Grafo<T>> grafos2 = new ArrayList<Grafo<T>>();
-		HeapFibonacci<Aresta<T>> hfarestas = gutil.arestaToHeap(this.getArestas());
-		ArrayList<Aresta<T>> arestas = gutil.heapToAresta(hfarestas);
+		Grafo<T> gtemp = this.clone();
 		Kruskal<T> kru = new Kruskal<T>();
 		Grafo<T> gmin;
 		
-		gmin = kru.obterAGM(this);
+		gmin = kru.obterAGM(gtemp);
 		
 		grafos.add(gmin.clone());
 		
-		for (Grafo<T> grafo1 : listaAGM( arestas, gmin)) {
-			grafos.add(grafo1.clone());
-		}
-		
-		for (Grafo<T> grafo2 : grafos) {
-			grafos2 = listaAGM( arestas, grafo2);
-		}
-		
-		for (Grafo<T> grafo1 : grafos2) {
-			grafos.add(grafo1);
-		}
+		listaAGM(grafos , gtemp, gmin);
+
 		
 		return grafos;
 	}
 
-	/*private ArrayList<Grafo<T>> listaAGM(ArrayList<Aresta<T>> arestas, Grafo<T> gmin) {
-		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
+	private void listaAGM(ArrayList<Grafo<T>> grafos ,Grafo<T> gtemp , Grafo<T> gmin) {		
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
+		
+		HeapFibonacci<Aresta<T>> hfarestas = gutil.arestaToHeap(this.getArestas());
+		ArrayList<Aresta<T>> arestas = gutil.heapToAresta(hfarestas);
+		
 		DFS<T> dfs = new DFS<T>();
-		HeapFibonacci<Aresta<T>> heapMin = gutil
-				.arestaToHeap(gmin.getArestas());
+		
+		HeapFibonacci<Aresta<T>> heapMin = gutil.arestaToHeap(gmin.getArestas());
 		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
 		
 		for (int i = arestasMin.size() - 1; i >= 0; i--) {
@@ -158,7 +150,7 @@ public class Grafo <T>{
 						if(dfs.isConexo(gmin) && (this.getVertices().size() == gmin.getVertices().size())){
 							grafos.add(gmin.clone());
 							gmin.deleteEdge(edg.clone());
-							//break;
+							break;
 						}
 						
 						gmin.deleteEdge(edg.clone());
@@ -169,9 +161,9 @@ public class Grafo <T>{
 			
 			gmin.addElem(arestaMax);
 		}
-		return grafos;
+		return;
 	}
-	*/
+
 	
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
