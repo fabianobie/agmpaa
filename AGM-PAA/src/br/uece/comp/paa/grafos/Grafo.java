@@ -337,7 +337,7 @@ public class Grafo <T>{
 		
 		//for (int i = 1; i <= 4; i++) {
 			GrafosUtil<String> gutil = new GrafosUtil<String>();
-			Grafo<String> grf = gutil.fileToGrafo("files/grafo3.txt");
+			Grafo<String> grf = gutil.fileToGrafo("files/grafo1.txt");
 
 			System.out.println(grf);
 			//gutil.telaGrafos(grf);
