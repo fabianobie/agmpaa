@@ -23,74 +23,155 @@ import br.uece.comp.paa.grafos.ui.GrafosUtil;
  */
 public class Boruvka<T> implements Iagm<T>{
 	
+	private Boolean rgrau =  false;
+	private int grauMax;
+	private Boolean rdmax =  false;
+	private Double dMax;
+	
+	
+	private Grafo<T> result;
 	/* (non-Javadoc)
 	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
 	 */
 	@Override
 	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException {
-		ArrayList<Grafo<T>> listG = new ArrayList<Grafo<T>>();
-		Grafo<T> result = new Grafo<T>();
-		
-		for(Vertice<T> V : grafo.getVertices()){	
-						Grafo<T> grf = new Grafo<T>();
-						grf.addElem((Vertice<T>) V.clone());
-						listG.add(grf );
-		}
-		
-		result.setNome(grafo.getNome()+"_MINIMO");
-		
-		DFS<T> dfs = new DFS<T>();
-		
-		while(!(dfs.isConexo(result) && (result.getVertices().size()==grafo.getVertices().size()))){
-			for (Grafo<T> G : listG) {
-				Aresta<T> edg = obterMinimo(G,grafo);
-				G.addElem(edg);
-					result = (Grafo<T>) G.clone();
+		result = new Grafo<T>();
+		ArrayList<Vertice<T>> vrtxs = grafo.getVertices();
+		GrafosUtil<T> gutil = new GrafosUtil<T>();
 
+		for (Vertice<T> vertice : vrtxs) {
+			grafo.makeSet(vertice);
+		}
+
+		for (Vertice<T> vertice : vrtxs) {
+			HeapFibonacci<Aresta<T>> heap = new HeapFibonacci<Aresta<T>>();
+			for (Aresta<T> aresta : vertice.getListAdj()) {
+				heap.inserir(aresta.getPeso(), aresta.clone());
+			}
+			Aresta<T> edg = heap.extrairMin().getInfo();
+			result.addElem(edg);
+			grafo.union(edg.getA(), edg.getB());
+		}
+
+		HeapFibonacci<Aresta<T>> hArestas = gutil.arestaToHeap(grafo
+				.getArestas());
+
+		while (!hArestas.isVazio()) {
+			HeapFibonacciNoh<Aresta<T>> nohHeap = hArestas.extrairMin();
+			Aresta<T> edg = nohHeap.getInfo();
+
+			if (!grafo.findSet(edg.getA()).equals(grafo.findSet(edg.getB()))) {
+				if (restricaoDeGrau(result, edg)) {
+					if (restricaoDeDmax(result, edg)) {
+						result.addElem(edg.clone());
+						grafo.union(edg.getA(), edg.getB());
+					}
+				}
 			}
 		}
-		
-		
+
 		return result;
 	}
 	
-	
-	
-	/**
-	 * Mtodo que retorna a aresta mnima de um conjunto de vrtices de entrada
-	 * 
-	 * @param subgrafo
-	 * @param grafo
-	 * @return
-	 */
-	public Aresta<T> obterMinimo(Grafo<T> subgrafo, Grafo<T> grafo) {
-		Aresta<T> retorno = null;
 		
-		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
-		ArrayList<Aresta<T>> edgs = grafo.getArestas();
-		
-		for (Aresta<T> E : edgs) {
-			arestas.inserir(E.getPeso(), E);
+		public Grafo<T> obterAGM(Grafo<T> grafo ,int grau , Double distMax) throws CloneNotSupportedException  {
+			if (grau >= 2) {
+				this.rgrau = true;
+				this.grauMax = grau;
+			}
+
+			if (distMax > 0) {
+				this.rdmax = true;
+				this.dMax = distMax;
+			}
+
+			return obterAGM(grafo);
 		}
-		
-		// Laos que percorrem todos os vrtices e todas as arestas e obtm a
-		// aresta com o peso mnimo.
-		while(!arestas.isVazio()){
-			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
-			Aresta<T> edg;
-				edg = (Aresta<T>) nohHeap.getInfo().clone();
-				boolean a,b;
-				a=subgrafo.hasVertice(edg.getA());
-				b=subgrafo.hasVertice(edg.getB());
-				if ((a || b) && !(a && b)) {
-					retorno = edg;
-					break;
+
+		/**
+		 * @param result
+		 * @param edg
+		 * @return
+		 */
+		private boolean restricaoDeDmax(Grafo<T> result, Aresta<T> edg) {
+			if (rdmax) {
+				ArrayList<Aresta<T>> arestas = result.getArestas();
+				Double distancia = 0.0;
+				for (Aresta<T> aresta : arestas) {
+					distancia += aresta.getPeso();
 				}
-
+				if (distancia + edg.getPeso() < dMax)
+					return true;
+				else
+					return false;
+			} else
+				return true;
 		}
 
-		return retorno;
+		/**
+		 * @param result
+		 * @param edg
+		 */
+		private boolean restricaoDeGrau(Grafo<T> result, Aresta<T> edg) {
+			if (rgrau) {
+				ArrayList<Vertice<T>> vertices = result.getVertices();
+				int id = -1;
+				if (result.getIdVertice(edg.getA().clone()) != -1) {
+					id = result.getIdVertice(edg.getA().clone());
+				} else {
+					id = result.getIdVertice(edg.getB().clone());
+				}
+				if (id != -1) {
+					Vertice<T> vertice = vertices.get(id);
+					if (vertice.getListAdj().size() + 1 > this.grauMax)
+						return false;
+					else
+						return true;
+				} else
+					return true;
+			} else {
+				return true;
+			}
+		}
 
-	}
+
+		public Boolean getRgrau() {
+			return rgrau;
+		}
+
+
+		public void setRgrau(Boolean rgrau) {
+			this.rgrau = rgrau;
+		}
+
+
+		public int getGrauMax() {
+			return grauMax;
+		}
+
+
+		public void setGrauMax(int grauMax) {
+			this.grauMax = grauMax;
+		}
+
+
+		public Boolean getRdmax() {
+			return rdmax;
+		}
+
+
+		public void setRdmax(Boolean rdmax) {
+			this.rdmax = rdmax;
+		}
+
+
+		public Double getdMax() {
+			return dMax;
+		}
+
+
+		public void setdMax(Double dMax) {
+			this.dMax = dMax;
+		}
 	
 }
