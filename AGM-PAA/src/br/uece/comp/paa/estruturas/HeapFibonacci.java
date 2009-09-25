@@ -231,7 +231,12 @@ public class HeapFibonacci<T> {
 		// marca ele como falso
 		outroNoh.setMarcado(false);
 	}
-
+	
+	/**
+	 * 
+	 * @param noh
+	 * @param chave
+	 */
 	public void diminuirChave(HeapFibonacciNoh<T> noh, double chave) {
 		if (chave > noh.getChave()) {
 			System.out.println("ERRO: Valor de chave muito pequeno");
@@ -280,6 +285,33 @@ public class HeapFibonacci<T> {
 
         //filho eh desmarcado caso marcado
         nohFilho.setMarcado(false);
+	}
+	
+	/**
+	 * Procura na Heap se contem determinada informação
+	 * @param info
+	 * @return
+	 */
+    public boolean hasInfo(T info){
+		boolean result = false;
+		HeapFibonacci<T> gAux = new HeapFibonacci<T>();
+		HeapFibonacciNoh<T> gNoh;
+		
+		while(!this.isVazio()){
+			gNoh = this.extrairMin();
+			gAux.inserir(gNoh.getChave(),gNoh.getInfo());
+			
+			if (gNoh.getInfo().equals(info)) {
+				result = true;
+				break;
+			}
+		}
+		while(!gAux.isVazio()){
+			gNoh = gAux.extrairMin();
+			this.inserir(gNoh.getChave(),gNoh.getInfo());
+		}
+		
+		return result;
 	}
 	
 	
