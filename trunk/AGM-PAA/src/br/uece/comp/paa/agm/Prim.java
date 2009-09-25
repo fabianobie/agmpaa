@@ -296,13 +296,13 @@ public class Prim<T> implements Iagm<T>{
                 Kruskal<Integer> kru = new Kruskal<Integer>();
                 Prim<Integer> prim = new Prim<Integer>();
                 
-                System.out.println(grafo);
+/*                System.out.println(grafo);
                int k =1;
                 for(Grafo<Integer> grafo1 : grafo.obterKAGMS()){
                     System.out.println("grafo  "+ (k++)+"\n"+grafo1);
                    
                 }
-
+*/
         }
 
 }
