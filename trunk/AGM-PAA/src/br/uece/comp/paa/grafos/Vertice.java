@@ -83,6 +83,10 @@ public class Vertice<T>{
 		return -1;
 	}
 	
+	public int getGrau(){
+		return listAdj.size();
+	}
+	
 	@Override 
 	public boolean equals(Object obj) {
 		//if ((T)obj instanceof Vertice)

@@ -1,7 +1,7 @@
 /**
  * PAA - Projeto de Analise e Algoritmos
- * Universidade Estadual do Ceará - UECE
- * Alunos: Fabiano Tavares e Diego Sá
+ * Universidade Estadual do Cearï¿½ - UECE
+ * Alunos: Fabiano Tavares e Diego Sï¿½
  * Prof. Marcos Negreiro
  *
  */
@@ -21,8 +21,8 @@ import br.uece.comp.paa.grafos.Vertice;
  */
 public class Genetico<T> implements Iagm<T> {
 
-	private Boolean rgrau = false;
-	private int grauMax;
+	private Boolean rgrau = true;
+	private int grauMax=2;
 	private Boolean rdmax = false;
 	private Double dMax;
 	private Grafo<T> result;
@@ -35,16 +35,15 @@ public class Genetico<T> implements Iagm<T> {
 		for (Vertice<T> vertice : grafo.getVertices()) {
 			grafo.makeSet(vertice);
 		}
-
+		
 		while (!arestas.isEmpty()) {
 			int index = Math.abs(randomico.nextInt() % arestas.size());
-			System.out.println(index);
-			Aresta<T> edg = arestas.get(index);
+			Aresta<T> edg = arestas.get(index).clone();
 			arestas.remove(index);
 
 			if (!grafo.findSet(edg.getA()).equals(grafo.findSet(edg.getB()))) {
 				if (restricaoDeGrau(result, edg)) {
-					if (restricaoDeDmax(result, edg)) {
+					if (restricaoDeDmax(result,edg)) {
 						result.addElem(edg.clone());
 						grafo.union(edg.getA(), edg.getB());
 					}
@@ -54,11 +53,91 @@ public class Genetico<T> implements Iagm<T> {
 
 		return result;
 	}
+	
+	
+	public Grafo<T> crossOver(Grafo<T>grafo ,Grafo<T> G1, Grafo<T> G2){
+		Grafo<T> G = G1.intersec(G2);
+		Grafo<T> F = G.union(G1, G2);
+		
+		//TODO: randomizar os menores 
+		for (Aresta<T> aresta : F.getArestas()) {
+			if(!G.findSet(aresta.getA()).equals(G.findSet(aresta.getB())))
+				if(restricaoDeGrau(G, aresta))
+					if(restricaoDeDmax(G, aresta)){
+						G.addElem(aresta);
+						G.union(aresta.getA(),aresta.getB());
+					}
+			if(G.getNumAresta() == grafo.getNumVertice()-1)
+				return G;
+		}
+		
+		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
+		for (Aresta<T> aresta : G.getArestas()) {
+			if(!grafo.findSet(aresta.getA()).equals(grafo.findSet(aresta.getB()))){
+				arestas.add(aresta.clone());
+			}
+		}
+		
+		//TODO: randomizar os menores 
+		for (Aresta<T> aresta : arestas) {
+			if(!G.findSet(aresta.getA()).equals(G.findSet(aresta.getB())))
+				if(restricaoDeGrau(G, aresta))
+					if(restricaoDeDmax(G, aresta)){
+						G.addElem(aresta);
+						G.union(aresta.getA(),aresta.getB());
+					}
+			if(G.getNumAresta() == grafo.getNumVertice()-1)
+				break;
+		}
+		
+		return G;
+	}
+	
+	public void mutation(Grafo<T> grafo , Grafo<T> G){
+		Random randomico = new Random();
+		DFS<T> dfs = new DFS<T>();
 
-	public ArrayList<Grafo<T>> gerarPopulacao(Grafo<T> grafo, int tempo) {
+		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
+		for (Aresta<T> aresta : G.getArestas()) {
+			if (!grafo.findSet(aresta.getA()).equals(
+					grafo.findSet(aresta.getB()))) {
+					arestas.add(aresta.clone());
+			}
+		}
+
+		int index = Math.abs(randomico.nextInt() % arestas.size());
+		Aresta<T> edgAdd = arestas.get(index).clone();
+		Aresta<T> edgDel;
+		G.addElem(edgAdd);
+
+		ArrayList<Aresta<T>> ciclo = dfs.getCiclo(G, edgAdd);
+
+		if (edgAdd.getA().getGrau() == grauMax) {
+				edgDel=find(ciclo , edgAdd.getA());
+		} else if (edgAdd.getB().getGrau() == grauMax) {
+				edgDel=find(ciclo , edgAdd.getB());
+		} else {
+			index = Math.abs(randomico.nextInt() % ciclo.size());
+			 edgDel = ciclo.get(index).clone();
+			G.addElem(edgDel);
+		}
+	}
+	
+	/**
+	 * @param ciclo
+	 * @param a
+	 * @return
+	 */
+	private Aresta<T> find(ArrayList<Aresta<T>> ciclo, Vertice<T> V) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public ArrayList<Grafo<T>> gerarPopulacao(Grafo<T> grafo, int qtd) {
 		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
 
-		for (int i = 0; i < tempo; i++) {
+		for (int i = 0; i < qtd; i++) {
 			grafos.add(getInit(grafo));
 		}
 		return grafos;

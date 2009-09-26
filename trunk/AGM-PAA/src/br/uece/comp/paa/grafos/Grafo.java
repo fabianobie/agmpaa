@@ -11,8 +11,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import br.uece.comp.paa.agm.DFS;
+import br.uece.comp.paa.agm.Genetico;
 import br.uece.comp.paa.agm.Kruskal;
-import br.uece.comp.paa.agm.Prim;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
@@ -41,6 +41,20 @@ public class Grafo <T>{
 			if(V.getPai().equals(vrtx.getPai()))
 				V.setPai(v1.getPai());
 		}
+	}
+	
+	public  Grafo<T> union(Grafo<T> g1, Grafo<T> g2){
+		//TODO fazer metodo de interseção
+		return null;
+	}
+	
+	public  Grafo<T> intersec(Grafo<T> grafo){
+		//TODO fazer metodo de interseção
+		return null;
+	}
+	
+	public  int getNumVertice(){
+		return vertices.size();
 	}
 	
 	public  ArrayList<Vertice<T>> getSubSet(Vertice<T> V ){
@@ -245,6 +259,17 @@ public class Grafo <T>{
 		return arestas;
 	}
 
+	public boolean doCiclo(Aresta<T> aresta) {
+		boolean a, b;
+		a = hasVertice(aresta.getA());
+		b = hasVertice(aresta.getB());
+
+		if ((a && b))
+			return true;
+		else
+			return false;
+	}
+
 	public void deleteEdge(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getB();
@@ -292,9 +317,6 @@ public class Grafo <T>{
 		return numAresta;
 	}
 
-	public void setNumAresta(int numAresta) {
-		this.numAresta = numAresta;
-	}
 
 	@Override
 	public String toString() {
@@ -334,22 +356,21 @@ public class Grafo <T>{
 	 * Testando Grafos
 	 */
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
+		GrafosUtil<String> gutil = new GrafosUtil<String>();
+		Grafo<String> grf = gutil.fileToGrafo("files/grafo3.txt");
+		Genetico<String> gen = new Genetico<String>();
 		
-		//for (int i = 1; i <= 4; i++) {
-			GrafosUtil<String> gutil = new GrafosUtil<String>();
-			Grafo<String> grf = gutil.fileToGrafo("files/grafo1.txt");
+		System.out.println(grf);
+		gutil.telaGrafos(grf);
+		int k = 1;
+		
+		for (Grafo<String> grafo : gen.gerarPopulacao(grf,10)) {
+			System.out.println("grafo " + k++ + " "
+					+ (grafo.getPesoTotal()) + "->"
+					+ grafo.getVertices().size() + " \n");
+			gutil.telaGrafos(grafo);
+		}
 
-			System.out.println(grf);
-			//gutil.telaGrafos(grf);
-			int k = 1;
-			
-			for (Grafo<String> grafo : grf.obterKAGMS(Integer.MAX_VALUE)) {
-				System.out.println("grafo " + k++ + " "
-						+ (grafo.getPesoTotal()) + "->"
-						+ grafo.getVertices().size() + " \n");
-				//gutil.telaGrafos(grafo);
-			}
-       // }
 
 	}
 
