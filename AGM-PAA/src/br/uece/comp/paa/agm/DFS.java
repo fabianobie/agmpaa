@@ -15,6 +15,7 @@ package br.uece.comp.paa.agm;
  *
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import br.uece.comp.paa.grafos.Aresta;
@@ -107,7 +108,11 @@ public class DFS<T> {
 
 			}
 		}
-
+	}
+	
+	public ArrayList<Aresta<T>> getCiclo(Grafo<T> grafo , Aresta<T> aresta){
+		//TODO: GET CICLO
+		return null;
 	}
 
 }
