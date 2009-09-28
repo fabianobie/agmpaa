@@ -10,9 +10,12 @@ package br.uece.comp.paa.grafos;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import com.sun.org.apache.bcel.internal.generic.ARETURN;
+
 import br.uece.comp.paa.agm.DFS;
 import br.uece.comp.paa.agm.Genetico;
 import br.uece.comp.paa.agm.Kruskal;
+import br.uece.comp.paa.agm.Prim;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.ui.GrafosUtil;
 
@@ -43,14 +46,32 @@ public class Grafo <T>{
 		}
 	}
 	
-	public  Grafo<T> union(Grafo<T> g1, Grafo<T> g2){
-		//TODO fazer metodo de interseção
-		return null;
+	public  Grafo<T> union(Grafo<T> grafo){
+		Grafo<T> result = new Grafo<T>();
+		
+		for (Aresta<T> aresta : this.getArestas()) {
+				result.addElem(aresta.clone());
+		}
+		for (Aresta<T> aresta : grafo.getArestas()) {
+				result.addElem(aresta.clone());
+		}
+		
+		return result;
 	}
 	
 	public  Grafo<T> intersec(Grafo<T> grafo){
-		//TODO fazer metodo de interseção
-		return null;
+		Grafo<T> result = new Grafo<T>();
+		
+		for (Aresta<T> aresta : this.getArestas()) {
+			for (Aresta<T> outraAresta : grafo.getArestas()) {
+				if(aresta.equals(outraAresta)){
+					result.addElem(aresta);
+					result.union(aresta.getA(),aresta.getA());
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	public  int getNumVertice(){
@@ -357,10 +378,16 @@ public class Grafo <T>{
 	 */
 	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
 		GrafosUtil<String> gutil = new GrafosUtil<String>();
-		Grafo<String> grf = gutil.fileToGrafo("files/grafo3.txt");
+		Grafo<String> grf = gutil.fileToGrafo("files/grafo1.txt");
 		Genetico<String> gen = new Genetico<String>();
+		Prim<String> prim = new Prim<String>();
+		DFS<String> dfs =  new DFS<String>();
 		
-		System.out.println(grf);
+		gutil.telaGrafos(grf);
+		gutil.telaGrafos(prim.obterAGM(grf,0,100.0));
+		
+		
+		/*System.out.println(grf);
 		gutil.telaGrafos(grf);
 		int k = 1;
 		
@@ -369,7 +396,7 @@ public class Grafo <T>{
 					+ (grafo.getPesoTotal()) + "->"
 					+ grafo.getVertices().size() + " \n");
 			gutil.telaGrafos(grafo);
-		}
+		}*/
 
 
 	}

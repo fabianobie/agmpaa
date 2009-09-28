@@ -57,7 +57,7 @@ public class Genetico<T> implements Iagm<T> {
 	
 	public Grafo<T> crossOver(Grafo<T>grafo ,Grafo<T> G1, Grafo<T> G2){
 		Grafo<T> G = G1.intersec(G2);
-		Grafo<T> F = G.union(G1, G2);
+		Grafo<T> F = G1.union(G2);
 		
 		//TODO: randomizar os menores 
 		for (Aresta<T> aresta : F.getArestas()) {
@@ -72,8 +72,8 @@ public class Genetico<T> implements Iagm<T> {
 		}
 		
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
-		for (Aresta<T> aresta : G.getArestas()) {
-			if(!grafo.findSet(aresta.getA()).equals(grafo.findSet(aresta.getB()))){
+		for (Aresta<T> aresta : grafo.getArestas()) {
+			if(!G.findSet(aresta.getA()).equals(G.findSet(aresta.getB()))){
 				arestas.add(aresta.clone());
 			}
 		}
@@ -98,10 +98,12 @@ public class Genetico<T> implements Iagm<T> {
 		DFS<T> dfs = new DFS<T>();
 
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
-		for (Aresta<T> aresta : G.getArestas()) {
-			if (!grafo.findSet(aresta.getA()).equals(
-					grafo.findSet(aresta.getB()))) {
-					arestas.add(aresta.clone());
+		for (Aresta<T> aresta : grafo.getArestas()) {
+			if (!G.hasAresta(aresta)) {
+				if(restricaoDeGrau(G, aresta))
+					if(restricaoDeDmax(G, aresta)){
+						arestas.add(aresta.clone());
+					}
 			}
 		}
 
@@ -188,21 +190,24 @@ public class Genetico<T> implements Iagm<T> {
 	 */
 	private boolean restricaoDeGrau(Grafo<T> result, Aresta<T> edg) {
 		if (rgrau) {
+			boolean okA = true, okB = true;
 			ArrayList<Vertice<T>> vertices = result.getVertices();
-			int id = -1;
-			if (result.getIdVertice(edg.getA().clone()) != -1) {
-				id = result.getIdVertice(edg.getA().clone());
-			} else {
-				id = result.getIdVertice(edg.getB().clone());
-			}
-			if (id != -1) {
-				Vertice<T> vertice = vertices.get(id);
-				if (vertice.getListAdj().size() + 1 > this.grauMax)
-					return false;
-				else
-					return true;
-			} else
+			int idA = -1;
+			int idB = -1;
+
+			idA = result.getIdVertice(edg.getA().clone());
+			idB = result.getIdVertice(edg.getB().clone());
+
+			if (idA != -1)
+				if (vertices.get(idA).getListAdj().size() + 1 > this.grauMax)
+					okA = false;
+			if (idB != -1)
+				if (vertices.get(idB).getListAdj().size() + 1 > this.grauMax)
+					okB = false;
+			if (okA && okB)
 				return true;
+			else
+				return false;
 		} else {
 			return true;
 		}
