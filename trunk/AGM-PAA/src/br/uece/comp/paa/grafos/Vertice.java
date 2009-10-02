@@ -11,16 +11,17 @@ import java.util.ArrayList;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
- *
+ * 
  */
 
-public class Vertice<T>{
+public class Vertice<T> {
 	private T info;
 	private Double posX;
 	private Double posY;
 	private ArrayList<Aresta<T>> listAdj = new ArrayList<Aresta<T>>();
 	private Vertice<T> pai = this;
-	
+	private int ordem;
+
 	public Vertice<T> getPai() {
 		return pai;
 	}
@@ -36,16 +37,17 @@ public class Vertice<T>{
 	public Vertice(T info) {
 		this.info = info;
 	}
-	
-	public Vertice(T info,Double posX, Double posY) {
+
+	public Vertice(T info, Double posX, Double posY) {
 		this.posX = posX;
 		this.posY = posY;
 		this.info = info;
 	}
-	
+
 	public T getInfo() {
 		return info;
 	}
+
 	public void setInfo(T info) {
 		this.info = info;
 	}
@@ -53,9 +55,11 @@ public class Vertice<T>{
 	public ArrayList<Aresta<T>> getListAdj() {
 		return listAdj;
 	}
+
 	public void setListAdj(ArrayList<Aresta<T>> listAdj) {
 		this.listAdj = listAdj;
 	}
+
 	public Double getPosX() {
 		return posX;
 	}
@@ -72,36 +76,45 @@ public class Vertice<T>{
 		this.posY = posY;
 	}
 
-	public void addAdj(Aresta<T> edg){
+	public void addAdj(Aresta<T> edg) {
 		listAdj.add(edg);
 	}
-	
-	public int getIdAresta(Aresta<T> edg){	
-			for(int j=0 ; j< this.getListAdj().size() ; j++) {
-				if(this.getListAdj().get(j).equals(edg)) return j;
-			}
+
+	public int getIdAresta(Aresta<T> edg) {
+		for (int j = 0; j < this.getListAdj().size(); j++) {
+			if (this.getListAdj().get(j).equals(edg))
+				return j;
+		}
 		return -1;
 	}
-	
-	public int getGrau(){
+
+	public int getGrau() {
 		return listAdj.size();
 	}
-	
-	@Override 
+
+	public int getOrdem() {
+		return ordem;
+	}
+
+	public void setOrdem(int ordem) {
+		this.ordem = ordem;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		//if ((T)obj instanceof Vertice)
-			//return false;
+		// if ((T)obj instanceof Vertice)
+		// return false;
 		Vertice<T> vrtx = (Vertice<T>) obj;
-		
+
 		if (vrtx.getInfo().equals(info))
 			return true;
 		else
 			return false;
 	}
-	
+
 	@Override
 	public String toString() {
-		String res =  "V [info=" + info + ",Pai="+pai.info+" listAdj=[";
+		String res = "V [info=" + info + ",Pai=" + pai.info + " listAdj=[";
 		for (Aresta<T> e : listAdj) {
 			res += e.toString();
 		}
@@ -109,15 +122,13 @@ public class Vertice<T>{
 		return res;
 	}
 
-
-	public Vertice<T> clone(){
+	public Vertice<T> clone() {
 		Vertice<T> cln = new Vertice<T>(info);
 		cln.posX = posX;
 		cln.posY = posY;
 		cln.pai = pai;
+		cln.ordem = ordem;
 		return cln;
 	}
-	
-	
-		
+
 }

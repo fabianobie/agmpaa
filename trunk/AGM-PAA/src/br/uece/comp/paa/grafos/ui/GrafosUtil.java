@@ -11,14 +11,18 @@ import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.AttributedCharacterIterator.Attribute;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
+import javax.smartcardio.ATR;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
 import org.jgraph.JGraph;
+import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
@@ -44,23 +48,52 @@ public class GrafosUtil<T>{
 		DefaultGraphCell cell = new DefaultGraphCell(name);
 		cell.addPort();
 		GraphConstants.setBounds(cell.getAttributes(), bounds);
+		GraphConstants.setResize(cell.getAttributes(), true);
 		GraphConstants.setBorder(cell.getAttributes(), BorderFactory.createRaisedBevelBorder());
 		GraphConstants.setGradientColor(cell.getAttributes(),Color.gray);
 		GraphConstants.setOpaque(cell.getAttributes(), true);
+		GraphConstants.setAbsolute(cell.getAttributes(), false);
+		
 		return cell;
 	}
 	
 	public  JGraph desenhaGrafo(Grafo<T> G){
 		GraphModel model = new DefaultGraphModel();
 		GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
+		
+		
 		JGraph graph = new JGraph(model, view);
+		
+		graph.setEditable(false);
+		
+		
+		
+		graph.setScale(2);
+		
+		
+		
+//		JGraph graph = getGraph(); // Replace with your own graph instance
+//		OutputStream out = getOutputStream(); // Replace with your output stream
+//		Color bg = null; // Use this to make the background transparent
+//		bg = graph.getBackground(); // Use this to use the graph background
+//		color
+//		BufferedImage img = graph.getImage(bg, inset);
+//		ImageIO.write(img, ext, out);
+//		out.flush();
+//		out.close();
+
+		
 		GrafosUtil<String> gutil = new GrafosUtil<String>();
 		
 		ArrayList<Vertice<T>> vrtxs = G.getVertices();
 		DefaultGraphCell[] cells = new DefaultGraphCell[vrtxs.size()];
+		AttributeMap map = new AttributeMap();
+		
+		GraphConstants.setResize(map, true);
 
+		view.setVisible(cells,true);
 		for(int i=0; i< vrtxs.size();i++){
-			
+			//cells[i].setAttributes(map);
 			cells[i] = gutil.createCell(vrtxs.get(i).getInfo().toString(),
 					new Rectangle2D.Double(vrtxs.get(i).getPosX(),vrtxs.get(i).getPosY(), 50, 20), false);
 		}
@@ -86,13 +119,14 @@ public class GrafosUtil<T>{
 					int arrow = GraphConstants.ARROW_NONE;
 					GraphConstants.setLineEnd(edge.getAttributes(), arrow);
 					GraphConstants.setEndFill(edge.getAttributes(), true);
-					
+					GraphConstants.setLabelAlongEdge(edge.getAttributes(), true);
+
 					graph.getGraphLayoutCache().insert(edge);	
 					//System.out.println(E.getA()+"----"+E.getB());
 				}
 			}
 		}
-		
+				graph.getGraphLayoutCache().collapse(graph.getSelectionCells());
 				graph.getGraphLayoutCache().insert(cells);
 		
 		return graph;
@@ -127,7 +161,19 @@ public class GrafosUtil<T>{
 				G.addElem(edg);
 			}
 		}else if(tipo==0){
-			//TODO  ler arquivo e calcular as distancias dos vertices
+			Vertice[] vertices = new Vertice[numVertice];
+			for (int i = 0; i < numVertice; i++) {
+				Vertice<T> vrtx = new Vertice<T>((T) scan.next());
+				vrtx.setPosX(Double.parseDouble(scan.next()));
+				vrtx.setPosY(Double.parseDouble(scan.next()));
+				vertices[i] = vrtx;
+			}
+			for (int i = 0; i < numVertice; i++) {
+				for (int j = i+1; j < numVertice; j++) {
+					Aresta<T> edg = new Aresta<T>(vertices[i],vertices[j],distancia(vertices[i], vertices[j]));
+					G.addElem(edg);
+				}
+			}
 		}else{
 			System.out.println("Erro de Formato: leitura ainda nao implementada");
 		}
@@ -167,6 +213,7 @@ public class GrafosUtil<T>{
 	
 	public void telaGrafos(Grafo<T> grafo){
 		JFrame frame = new JFrame();
+		frame.setTitle(grafo.getPesoTotal().toString());
 		frame.getContentPane().add(new JScrollPane(desenhaGrafo(grafo)));
 		frame.setBounds(10, 10, 500, 600);
 		frame.pack();

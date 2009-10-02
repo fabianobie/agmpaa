@@ -105,7 +105,6 @@ public class DFS<T> {
 			
 			if (indices.get(vertice.getInfo()) == 0) {
 				dfs(vertice);
-
 			}
 		}
 	}

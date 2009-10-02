@@ -7,6 +7,7 @@
  */
 package br.uece.comp.paa.agm.interfaces;
 
+import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 
 /**
@@ -15,6 +16,13 @@ import br.uece.comp.paa.grafos.Grafo;
  */
 public interface Iagm <T>{
 	
-	public Grafo<T> obterAGM(Grafo<T> grafo) throws CloneNotSupportedException;
+	public Grafo<T> obterAGM(Grafo<T> grafo);
+	
+	public Grafo<T> obterAGM(Grafo<T> grafo, int grau, Double distMax);
+	
+	public boolean restricaoDeDmax(Grafo<T> result, Aresta<T> edg);
+	
+	public boolean restricaoDeGrau(Grafo<T> result, Aresta<T> edg);
+
 	
 }
