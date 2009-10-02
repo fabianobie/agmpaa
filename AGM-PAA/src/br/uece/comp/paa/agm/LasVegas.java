@@ -14,7 +14,7 @@ import br.uece.comp.paa.grafos.Grafo;
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
  */
-public class LasVegas<T> implements Iagm<T> {
+public class LasVegas<T> extends Agm<T>{
 
 
 	@Override
