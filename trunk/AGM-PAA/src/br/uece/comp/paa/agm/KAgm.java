@@ -13,7 +13,7 @@ import br.uece.comp.paa.agm.interfaces.Iagm;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
-import br.uece.comp.paa.grafos.ui.GrafosUtil;
+import br.uece.comp.paa.util.GrafosUtil;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
