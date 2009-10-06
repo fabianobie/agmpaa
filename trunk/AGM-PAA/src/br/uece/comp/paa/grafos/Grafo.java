@@ -12,13 +12,11 @@ import java.util.ArrayList;
 
 import br.uece.comp.paa.agm.Boruvka;
 import br.uece.comp.paa.agm.DFS;
-import br.uece.comp.paa.agm.Genetico;
 import br.uece.comp.paa.agm.KAgm;
 import br.uece.comp.paa.agm.Kruskal;
 import br.uece.comp.paa.agm.Prim;
-import br.uece.comp.paa.agm.interfaces.Iagm;
 import br.uece.comp.paa.estruturas.HeapFibonacci;
-import br.uece.comp.paa.grafos.ui.GrafosUtil;
+import br.uece.comp.paa.util.GrafosUtil;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -29,7 +27,6 @@ public class Grafo <T>{
 	private String nome="GRAFO_PAA";
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
 	private int numAresta=0;
-	
 	
 	public  Vertice<T> findSet(Vertice<T> V){
 		Vertice<T> pai;
@@ -100,15 +97,29 @@ public class Grafo <T>{
 	public  Grafo<T> intersec(Grafo<T> grafo){
 		Grafo<T> result = new Grafo<T>();
 		
+		for (Vertice<T> vertice : this.getVertices()) {
+			int id = grafo.getIdVertice(vertice);
+			if(id!=-1){
+				for (Aresta<T> aresta: vertice.getListAdj()) {
+					for (Aresta<T> outraAresta: vertice.getListAdj()) {
+						if(aresta.equals(outraAresta))
+							result.addElem(aresta.clone());
+							
+					}
+				}
+			}
+			
+		}
+		
+		/*
 		for (Aresta<T> aresta : this.getArestas()) {
 			for (Aresta<T> outraAresta : grafo.getArestas()) {
 				if(aresta.equals(outraAresta)){
-					result.addElem(aresta.clone());
-					result.union(aresta.getA(),aresta.getB());
+					
 				}
 			}
 		}
-		
+		*/
 		return result;
 	}
 	
@@ -241,8 +252,10 @@ public class Grafo <T>{
 	
 	public boolean hasAresta(Aresta<T> edg){
 		for (Vertice<T> V : vertices) {
-			for (Aresta<T> E : V.getListAdj()) {
-				if(E.equals(edg)) return true;
+			if(V.equals(edg.getA()) || V.equals(edg.getB())){
+				for (Aresta<T> E : V.getListAdj()) {
+					if(E.equals(edg)) return true;
+				}
 			}
 		}
 		return false;
@@ -267,6 +280,23 @@ public class Grafo <T>{
 				b=vrtxs.contains(E.getB());
 				if (!(a && b)) {
 					arestas.add(E);
+				}
+			}
+		}
+		return arestas;
+	}
+	
+	public HeapFibonacci<Aresta<T>> getHeapAresta(){
+		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
+		ArrayList<Vertice<T>> vrtxs = new ArrayList<Vertice<T>>();
+		for (Vertice<T> V : this.getVertices()){
+			vrtxs.add(V);
+			for (Aresta<T> E : V.getListAdj()){
+				boolean a,b;
+				a=vrtxs.contains(E.getA());
+				b=vrtxs.contains(E.getB());
+				if (!(a && b)) {
+					arestas.inserir(E.getPeso(),E);
 				}
 			}
 		}
@@ -331,6 +361,9 @@ public class Grafo <T>{
 		return numAresta;
 	}
 
+	public void setNumAresta(int numAresta) {
+		this.numAresta = numAresta;
+	}
 
 	@Override
 	public String toString() {
@@ -373,7 +406,7 @@ public class Grafo <T>{
 		
 		
 		
-		String[] arqs = {"palmeiras2008.txt","quadrado2009.txt","serrinha2009.txt","DONI22009.txt","DONI12009.txt"};
+		String[] arqs = {"grafo3.txt"};
 		
 		for (String file : arqs) {
 			GrafosUtil<String> gutil = new GrafosUtil<String>();
@@ -385,10 +418,27 @@ public class Grafo <T>{
 			Kruskal<String> kru = new Kruskal<String>();
 			Prim<String> prim = new Prim<String>();
 			DFS<String> dfs = new DFS<String>();
+			KAgm<String> kagm = new KAgm<String>();
+			
+			
 			
 			System.out.println(dfs.isConexo(grf));
 			
-			Grafo<String> grafo;
+			System.out.println("\n"+file+"--------------------------------------------------");
+			System.out.println("Algoritmo | PesoTotal | TempoTotal | numVetices\n");
+			
+			/*for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , prim , 0, 0.0) ) {
+				System.out.println("PRIM  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
+			}
+			for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , kru , 0, 0.0) ) {
+				System.out.println("KRUSKAL  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
+			}
+			for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , bor , 0, 0.0) ) {
+				System.out.println("BORUVKA  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
+				grf=grafo1;
+			}*/
+			gutil.telaGrafos(grf).setVisible(true);
+			/*
 			grafo  = prim.obterAGM(grf,0,0.0);
 			System.out.println("\n"+file+"--------------------------------------------------");
 			System.out.println("Algoritmo | PesoTotal | TempoTotal | numVetices\n");
@@ -397,7 +447,7 @@ public class Grafo <T>{
 			System.out.println("KRUSKAL | "+ (grafo.getPesoTotal()) + " | " + kru.getMetrica().getTempoTotal() + " | "+ grafo.getVertices().size() +" \n");
 			grafo  = bor.obterAGM(grf,0,0.0);
 			System.out.println("BORUVKA | "+ (grafo.getPesoTotal()) + "| " + bor.getMetrica().getTempoTotal() + " | "+ grafo.getVertices().size() +" \n");
-		
+			*/
 		}
 			
 
