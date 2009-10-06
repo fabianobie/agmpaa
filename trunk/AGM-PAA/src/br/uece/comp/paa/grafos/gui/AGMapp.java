@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,8 @@ import br.uece.comp.paa.agm.Boruvka;
 import br.uece.comp.paa.agm.Genetico;
 import br.uece.comp.paa.agm.KAgm;
 import br.uece.comp.paa.agm.Kruskal;
+import br.uece.comp.paa.agm.LasVegas;
+import br.uece.comp.paa.agm.MonteCarlo;
 import br.uece.comp.paa.agm.Prim;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.util.GrafosUtil;
@@ -87,23 +90,35 @@ public class AGMapp extends javax.swing.JFrame {
 		labInstituicao = new javax.swing.JLabel();
 		labProf = new javax.swing.JLabel();
 		Image imageBie = null;
-		try {
-			// Read from a file
+
 			File bieLogo = new File("img/bie.jpg");
-			imageBie = ImageIO.read(bieLogo);
-		} catch (Exception e) {
-			System.out.println("Logo Não Encontrado !");
-		}
-		labImgBie = new javax.swing.JLabel(new ImageIcon(imageBie));
+			if(bieLogo.exists()){
+				try {
+					imageBie = ImageIO.read(bieLogo);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				labImgBie = new javax.swing.JLabel(new ImageIcon(imageBie));
+			}else
+				labImgBie = new javax.swing.JLabel("Fabiano:");
+				
+		
 		Image imageBob = null;
-		try {
-			// Read from a file
+
 			File bobLogo = new File("img/bob.jpg");
-			imageBob = ImageIO.read(bobLogo);
-		} catch (Exception e) {
-			System.out.println("Logo Não Encontrado !");
-		}
-		labImgBob = new javax.swing.JLabel(new ImageIcon(imageBob));
+			if(bobLogo.exists()){
+				try {
+					imageBob = ImageIO.read(bobLogo);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				labImgBob = new javax.swing.JLabel(new ImageIcon(imageBob));
+			}else
+				labImgBob = new javax.swing.JLabel("Diego:");
+				
+	
 		labStatus = new javax.swing.JLabel();
 		inpStatus = new javax.swing.JTextField();
 		tabConfig = new javax.swing.JTabbedPane();
@@ -903,8 +918,14 @@ public class AGMapp extends javax.swing.JFrame {
 			clearDesktop();
 			execGulosos();
 			break;
-		case 3: break;
-		case 4: break;
+		case 3:
+			clearDesktop();
+			execMonteCarlo();
+			break;
+		case 4:
+			clearDesktop();
+			execLasVegas();
+			break;
 		case 5: break;
 		case 6:
 			clearDesktop();
@@ -913,6 +934,85 @@ public class AGMapp extends javax.swing.JFrame {
 		}
 		
 		inpStatus.setText("finalizou...");
+	}
+
+	/**
+	 * 
+	 */
+	private void execMonteCarlo() {
+		GrafosUtil<String> gutil = new GrafosUtil<String>();
+		String metodo = cmbAlgoritmo.getSelectedItem().toString();
+		
+		int k = Integer.parseInt(inpKagm.getValue().toString());
+		int grau = Integer.parseInt(cmbGrau.getSelectedItem().toString()); 
+		double dmax = Double.parseDouble(inpDmax.getText());
+		String result = "";
+		
+		MonteCarlo<String> gen = new MonteCarlo<String>();
+		Metricas metrica =  gen.getMetrica();
+		
+		
+		Grafo<String> grafo = gen.GrafoMonteCarlos(this.grafo ,Double.parseDouble(inpTempo.getText()), grau, dmax);
+		
+		if(grafo!=null){
+		addInternalPainel(gutil.telaGrafos(grafo));
+		
+		result = "\nProjeto de Análise de Algoritmo: ALGORITMO MONTE CARLO (Exaustivo)\n";
+		result+= "-----------------------------------------------------------------\n";
+		result+= "Metricas: "+ metodo.toUpperCase()+"\n";
+		result+="Num Vertices:"+ grafo.getNumVertice()+"\n";
+		result+="Num Arestas:"+ grafo.getNumAresta()+"\n";
+		result+="\t| Tempo Inicial\t|Tempo Final\t| Tempo Total\n";
+		result+="AGM\t|"+metrica.getTempoInicial()+"\t|"+metrica.getTempoFinal()+"\t|"+metrica.getTempoTotal()+"\n";
+		result+= "-----------------------------------------------------------------\n";
+		txtConsole.setText(result);
+		}else{
+			result = "\nProjeto de Análise de Algoritmo: ALGORITMO MONTE CARLO (Exaustivo)\n";
+			result+= "-----------------------------------------------------------------\n";
+			txtConsole.setText("AGM não encontrado!");
+		}
+		
+	}
+
+	/**
+	 * Execução do Metodo LasVegas
+	 */
+	private void execLasVegas() {
+		GrafosUtil<String> gutil = new GrafosUtil<String>();
+		String metodo = cmbAlgoritmo.getSelectedItem().toString();
+		
+		int k = Integer.parseInt(inpKagm.getValue().toString());
+		int grau = Integer.parseInt(cmbGrau.getSelectedItem().toString()); 
+		double dmax = Double.parseDouble(inpDmax.getText());
+		
+		
+		LasVegas<String> gen = new LasVegas<String>();
+		Metricas metrica =  gen.getMetrica();
+		String result = "";
+		
+		Grafo<String> grafo = gen.GrafoLasVegas(this.grafo ,Double.parseDouble(inpTempo.getText()), grau, dmax);
+		
+		if(grafo!=null){
+		addInternalPainel(gutil.telaGrafos(grafo));
+		
+		
+		
+		result = "\nProjeto de Análise de Algoritmo: ALGORITMO LAS VEGAS\n";
+		result+= "-----------------------------------------------------------------\n";
+		result+= "Metricas: "+ metodo.toUpperCase()+"\n";
+		result+="Num Vertices:"+ grafo.getNumVertice()+"\n";
+		result+="Num Arestas:"+ grafo.getNumAresta()+"\n";
+		result+="\t| Tempo Inicial\t|Tempo Final\t| Tempo Total\n";
+		result+="AGM\t|"+metrica.getTempoInicial()+"\t|"+metrica.getTempoFinal()+"\t|"+metrica.getTempoTotal()+"\n";
+		result+= "-----------------------------------------------------------------\n";
+		txtConsole.setText(result);
+		}else{
+			result = "\nProjeto de Análise de Algoritmo: ALGORITMO MONTE CARLO (Exaustivo)\n";
+			result+= "-----------------------------------------------------------------\n";
+			txtConsole.setText("AGM não encontrado!");
+		}
+		
+		
 	}
 
 	/**

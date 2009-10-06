@@ -56,6 +56,11 @@ public class HeapFibonacciNoh<T>{
 
 
 
+    /**
+     * Construtor da Heap
+     * @param info
+     * @param chave
+     */
     public  HeapFibonacciNoh(T info, double chave)
     {
         this.info = info;
@@ -67,16 +72,25 @@ public class HeapFibonacciNoh<T>{
     }
 
     
+    /**
+     * @return
+     */
     public HeapFibonacciNoh<T> getPai() {
 		return pai;
 	}
 
 
+	/**
+	 * @param pai
+	 */
 	public void setPai(HeapFibonacciNoh<T> pai) {
 		this.pai = pai;
 	}
 
 
+	/**
+	 * @return
+	 */
 	public HeapFibonacciNoh<T> getFilho() {
 		return filho;
 	}
@@ -148,6 +162,10 @@ public class HeapFibonacciNoh<T>{
 
 
 
+	/**
+	 * Metodo de impressão de apenas um Noh da Heap
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString()
     {
             StringBuffer buf = new StringBuffer();

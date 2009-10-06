@@ -25,14 +25,8 @@ import br.uece.comp.paa.grafos.Vertice;
 public class DFS<T> {
 
 	private Object[] indiceVertice = null;
-	private HashMap<Object, Integer> indices = new HashMap<Object, Integer>(); // HashMap
-	// para
-	// guardar
-	// as
-	// info's
-	// de
-	// cada
-	// vrtice.
+	//HashMap para guardar as info's de cada vrtice.
+	private HashMap<Object, Integer> indices = new HashMap<Object, Integer>(); 
 	Grafo<T> grafoDFS = new Grafo<T>();
 
 	/**
@@ -68,16 +62,7 @@ public class DFS<T> {
 				break;
 			}
 		}
-		// Trecho para apresentar a lista de vrtices e um ndice se ele foi
-		// visitado(indice 1) ou no foi visitado(indice 0)
-		/*System.out.println("\nResultado final da busca(Vrtices visitados):");
-		for (int i = 0; i < grafoDFS.getVertices().size(); i++) {
-			System.out.print("\t"
-					+ indices.get(grafoDFS.getVertices().get(i).getInfo())
-					+ "(" + grafoDFS.getVertices().get(i).getInfo() + ")");
-		}
-		*/
-		
+
 		if (conexo) {
 
 			return true;
@@ -93,8 +78,6 @@ public class DFS<T> {
 	 */
 	public void dfs(Vertice<T> verticeOrigem) {
 		indices.put(verticeOrigem.getInfo(), 1);
-		Boolean conexo = true;
-
 		Vertice<T> vertice = null;
 		//Laço para percorrer todas as arestas do vrtice selecionado
 		for (Aresta<T> aresta : verticeOrigem.getListAdj()) {
@@ -109,9 +92,4 @@ public class DFS<T> {
 		}
 	}
 	
-	public ArrayList<Aresta<T>> getCiclo(Grafo<T> grafo , Aresta<T> aresta){
-		//TODO: GET CICLO
-		return null;
-	}
-
 }

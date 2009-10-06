@@ -28,6 +28,11 @@ public class Grafo <T>{
 	private ArrayList<Vertice<T>> vertices = new ArrayList<Vertice<T>>();
 	private int numAresta=0;
 	
+	/**
+	 * Encontra o elemento representante(pai) do conjunto de V
+	 * @param V
+	 * @return
+	 */
 	public  Vertice<T> findSet(Vertice<T> V){
 		Vertice<T> pai;
 		int id = getIdVertice(V);
@@ -39,42 +44,58 @@ public class Grafo <T>{
 		return pai; 
 	}
 	
+	/**
+	 * torna todo os vertices disjunto
+	 */
 	public void makeSet(){
 		for (Vertice<T> vertice : vertices) {
 			this.makeSet(vertice);
 		}
 	}
 
+	/**
+	 * Torna o vertice o elemento representatante do conjunto
+	 * @param V
+	 */
 	public void makeSet(Vertice<T> V) {
 		V.setPai(V);
 	}
 	
 
+	/**
+	 * Executa a união de dois vertices no mesmo conjunto
+	 * @param v1
+	 * @param v2
+	 */
 	public void union(Vertice<T> v1, Vertice<T> v2) {
+		//encontra o pai de cada
 		Vertice<T> i = findSet(v1);
 		Vertice<T> j = findSet(v2);
-		if (i.getOrdem() == 0 &&  j.getOrdem() == 0) {
+		
+		// verifica a ordem do vertice representate do conjunto para tomar
+		// a decisao de quem vai respresentar e qnto tempo representa
+		if (i.getOrdem() == 0 && j.getOrdem() == 0) {
 			v2.setPai(v1.getPai());
 			i.setOrdem(1);
 		} else if (i.getOrdem() == 0) {
 			v1.setPai(v2.getPai());
-			j.setOrdem(j.getOrdem()+1);
+			j.setOrdem(j.getOrdem() + 1);
 		} else if (j.getOrdem() == 0) {
 			v2.setPai(v1.getPai());
-			i.setOrdem(i.getOrdem()+1);
+			i.setOrdem(i.getOrdem() + 1);
 		} else {
 			if (i.getOrdem() >= j.getOrdem()) {
 				for (Vertice<T> V : vertices) {
-					if(V.getPai().equals(j)){
+					if (V.getPai().equals(j)) {
 						V.setPai(i);
-						i.setOrdem(i.getOrdem()+1);
+						i.setOrdem(i.getOrdem() + 1);
 					}
 				}
 			} else {
 				for (Vertice<T> V : vertices) {
-					if(V.getPai().equals(i)){
+					if (V.getPai().equals(i)) {
 						V.setPai(j);
-						j.setOrdem(j.getOrdem()+1);
+						j.setOrdem(j.getOrdem() + 1);
 					}
 				}
 			}
@@ -82,12 +103,18 @@ public class Grafo <T>{
 
 	}
 
+	/**
+	 * União de grafos G1 U G2 = G
+	 * @param grafo
+	 * @return
+	 */
 	public  Grafo<T> union(Grafo<T> grafo){
 		Grafo<T> result = new Grafo<T>();
-		
+		//add todas as arestas de G1
 		for (Aresta<T> aresta : this.getArestas()) {
 				result.addElem(aresta.clone());
 		}
+		//add todas as arestas de G2
 		for (Aresta<T> aresta : grafo.getArestas()) {
 				result.addElem(aresta.clone());
 		}
@@ -95,6 +122,11 @@ public class Grafo <T>{
 		return result;
 	}
 	
+	/**
+	 * Interceção: G1 interceção G2 = as aresta que estaso em G1 e G2
+	 * @param grafo
+	 * @return
+	 */
 	public  Grafo<T> intersec(Grafo<T> grafo){
 		Grafo<T> result = new Grafo<T>();
 		
@@ -111,16 +143,7 @@ public class Grafo <T>{
 			}
 			
 		}
-		
-		/*
-		for (Aresta<T> aresta : this.getArestas()) {
-			for (Aresta<T> outraAresta : grafo.getArestas()) {
-				if(aresta.equals(outraAresta)){
-					
-				}
-			}
-		}
-		*/
+
 		return result;
 	}
 	
@@ -128,6 +151,11 @@ public class Grafo <T>{
 		return vertices.size();
 	}
 	
+	/**
+	 * Dado um subconjunto de Grafo retorna todas arestas d subconjunto
+	 * @param grafo
+	 * @return
+	 */
 	public  ArrayList<Vertice<T>> getSubSet(Grafo<T> grafo ){
 		ArrayList<Vertice<T>> result = new ArrayList<Vertice<T>>(); 
 		
@@ -140,94 +168,73 @@ public class Grafo <T>{
 		return result;
 	}
 	
-/*	public ArrayList<Grafo<T>> obterKAGMS(){
-		
-		ArrayList<Grafo<T>> grafos = new ArrayList<Grafo<T>>();
-		Kruskal<T> kru = new Kruskal<T>();
-		Grafo<T> gtemp = this.clone();
-		GrafosUtil<T> gutil = new GrafosUtil<T>();
-		
-		Grafo<T> gmin = kru.obterAGM(gtemp);
-		grafos.add(gmin.clone());
-		gutil.telaGrafos(gmin.clone());
-		
-		listAGM(grafos , gtemp, gmin); 
-		
-		return grafos;
-	}
-
-	private void listAGM(ArrayList<Grafo<T>> grafos, Grafo<T> gtemp, Grafo<T> gmin){
-		Kruskal<T> kru = new Kruskal<T>();
-		GrafosUtil<T> gutil = new GrafosUtil<T>();
-		HeapFibonacci<Aresta<T>> heapMin = gutil.arestaToHeap(gmin.getArestas());
-		ArrayList<Aresta<T>> arestasMin = gutil.heapToAresta(heapMin);
-		
-		if(gtemp.getArestas().size() == getArestas().size() - (getVertices().size()-2)) return;
-			
-		for (int i = arestasMin.size() - 1; i >= 0; i--) {
-		
-			Aresta<T> arestaMax = arestasMin.get(i);
-			gtemp.deleteEdge(arestaMax);
-			gmin = kru.obterAGM(gtemp);
-			if(gmin.getVertices().size()==getVertices().size() &&  !gutil.hasGrafo(grafos,gmin)){
-				grafos.add(gmin.clone());
-				gutil.telaGrafos(gmin.clone());
-				listAGM(grafos, gtemp, gmin);
-				gtemp.addElem(arestaMax);
-			}else{
-				return;
-			}
-		}
-		return;
-	}
-	*/
 	
+	/**
+	 * Adiciona uma aresta
+	 * @param va
+	 * @param vb
+	 * @param peso
+	 */
 	public void addEdge(Vertice<T> va, Vertice<T> vb , Double peso){
 		Aresta<T> edg = new Aresta<T>(va, vb, peso);
 		addElem(edg);
 	}
 	
+	/**
+	 * Adiciona uma aresta/vertice
+	 * @param edg
+	 */
 	public void addElem(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getB();
 		boolean hasA=false, hasB=false;
+		
+		//verifica se existe determinada aresta
 		if(!hasAresta(edg)){
 			int ia , ib;
 			
-			if(!hasVertice(a)){
+			// verifica se ha os vertices
+			if (!hasVertice(a))
 				this.vertices.add(a);
-			}else{
+			else
 				hasA = true;
-			}
-			
-			if(!hasVertice(b)){
+
+			if (!hasVertice(b))
 				this.vertices.add(b);
-			}else{
-				hasB =true;	
-			}
+			else
+				hasB = true;		
 			
+			// recupera a psoição do vertice
 			ia = getIdVertice(a);
 			ib = getIdVertice(b);
 			
 			Vertice<T> va = vertices.get(ia);
 			Vertice<T> vb = vertices.get(ib);
 			
+			//detremina quem sera seu representante
 			if(!hasA)
 				makeSet(va);
 			if(!hasB)
 				makeSet(vb);
-			
+			//cria aresta
 			Aresta<T> nedg = new Aresta<T>(va,vb,edg.getPeso());
 			
+			//faz a uniao de vertices
 			union(va,vb);
 			
+			//adiciona a lista de adjacencia
 			va.addAdj(nedg);
 			vb.addAdj(nedg);
 			
+			//contabiliza numero de aresta
 			numAresta++;
 		}
 	}
 	
+	/**
+	 * Adicionar por vertice
+	 * @param vrtx
+	 */
 	public void addElem(Vertice<T> vrtx){
 		if(!hasVertice(vrtx)){
 			this.vertices.add(vrtx);
@@ -235,6 +242,7 @@ public class Grafo <T>{
 	}
 	
 	/**
+	 *Adicionar por um array de vertices
 	 * @param vertices1
 	 */
 	public void addElem(ArrayList<Vertice<T>> vertices1) {
@@ -244,6 +252,11 @@ public class Grafo <T>{
 	}
 	
 	
+	/**
+	 * Verifica a exitencia de um vertice
+	 * @param vrtx
+	 * @return
+	 */
 	public boolean hasVertice(Vertice<T> vrtx){
 		for (Vertice<T> V : vertices) {
 			if(V.equals(vrtx)) return true;	
@@ -251,6 +264,11 @@ public class Grafo <T>{
 		return false;
 	}
 	
+	/**
+	 * Olha se grafo tem a aresta
+	 * @param edg
+	 * @return
+	 */
 	public boolean hasAresta(Aresta<T> edg){
 		for (Vertice<T> V : vertices) {
 			if(V.equals(edg.getA()) || V.equals(edg.getB())){
@@ -262,6 +280,11 @@ public class Grafo <T>{
 		return false;
 	}
 	
+	/**
+	 * recupera a posição do vertice
+	 * @param vrtx
+	 * @return
+	 */
 	public int getIdVertice(Vertice<T> vrtx){
 		for (int i=0 ; i< vertices.size() ; i++) {
 			if(vertices.get(i).equals(vrtx)) return i;	
@@ -270,6 +293,10 @@ public class Grafo <T>{
 	}
 	
 	
+	/**
+	 * Arestas do grafo na forma de Array
+	 * @return
+	 */
 	public ArrayList<Aresta<T>> getArestas(){
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		ArrayList<Vertice<T>> vrtxs = new ArrayList<Vertice<T>>();
@@ -287,6 +314,10 @@ public class Grafo <T>{
 		return arestas;
 	}
 	
+	/**
+	 * Arestas do grafo na forma de Heap
+	 * @return
+	 */
 	public HeapFibonacci<Aresta<T>> getHeapAresta(){
 		HeapFibonacci<Aresta<T>> arestas = new HeapFibonacci<Aresta<T>>();
 		ArrayList<Vertice<T>> vrtxs = new ArrayList<Vertice<T>>();
@@ -304,6 +335,11 @@ public class Grafo <T>{
 		return arestas;
 	}
 
+	/**
+	 * Verifica se a aresta fora do grafo faz um ciclo ao ser adicionada
+	 * @param aresta
+	 * @return
+	 */
 	public boolean doCiclo(Aresta<T> aresta) {
 		if(this.findSet(aresta.getA()).equals(this.findSet(aresta.getB())))
 			return true;
@@ -311,11 +347,17 @@ public class Grafo <T>{
 			return false;
 	}
 
+	/**
+	 * Deleta uma aresta
+	 * @param edg
+	 */
 	public void deleteEdge(Aresta<T> edg){
 		Vertice<T> a = edg.getA(); 
 		Vertice<T> b = edg.getB();
 
+		//verifica se tem a aresta
 		if(hasAresta(edg)){
+			//remove da lista de adjacencia
 			int ia = getIdVertice(a);
 			Vertice<T> v1 = vertices.get(ia);
 			v1.getListAdj().remove(v1.getIdAresta(edg));
@@ -326,6 +368,10 @@ public class Grafo <T>{
 		}
 	}
 	
+	/**
+	 * Pega o peso Total da Grafo
+	 * @return
+	 */
 	public Double getPesoTotal() {
 		ArrayList<Aresta<T>> arestas = getArestas();
 		Double pesoTotal = 0.0;
@@ -335,31 +381,53 @@ public class Grafo <T>{
 		return pesoTotal;
 	}
 
+	/**
+	 * get array de vertices
+	 * @return
+	 */
 	public ArrayList<Vertice<T>> getVertices() {
 		return vertices;
 	}
 
+	/**
+	 * @param vertices
+	 */
 	public void setVertices(ArrayList<Vertice<T>> vertices) {
 		this.vertices = vertices;
 	}
 	
 	
+	/**
+	 * @return
+	 */
 	public String getNome() {
 		return nome;
 	}
 
+	/**
+	 * @param nome
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getNumAresta() {
 		return numAresta;
 	}
 
+	/**
+	 * @param numAresta
+	 */
 	public void setNumAresta(int numAresta) {
 		this.numAresta = numAresta;
 	}
 
+	/* Impressão
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		String res = "Grafo[\n";
@@ -370,6 +438,9 @@ public class Grafo <T>{
 		return res;
 	}
 	
+	/* Igualdade
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		Grafo<T> grafo = (Grafo<T>) obj;
@@ -379,6 +450,9 @@ public class Grafo <T>{
 		return true;
 	}
 	
+	/* Copia
+	 * @see java.lang.Object#clone()
+	 */
 	@Override
      public Grafo<T> clone(){
             
@@ -394,59 +468,6 @@ public class Grafo <T>{
              return grafoNovo;
      }
 
-	/*
-	 * Testando Grafos
-	 */
-	public static void main(String[] args) throws FileNotFoundException, CloneNotSupportedException {
-		
-		
-		
-		String[] arqs = {"grafo3.txt"};
-		
-		for (String file : arqs) {
-			GrafosUtil<String> gutil = new GrafosUtil<String>();
-			Grafo<String> grf = gutil.fileToGrafo("files/"+file);
-			
-			System.out.println("Leu Arquivo...");
-			
-			Boruvka<String> bor = new Boruvka<String>();
-			Kruskal<String> kru = new Kruskal<String>();
-			Prim<String> prim = new Prim<String>();
-			DFS<String> dfs = new DFS<String>();
-			KAgm<String> kagm = new KAgm<String>();
-			
-			
-			
-			System.out.println(dfs.isConexo(grf));
-			
-			System.out.println("\n"+file+"--------------------------------------------------");
-			System.out.println("Algoritmo | PesoTotal | TempoTotal | numVetices\n");
-			
-			/*for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , prim , 0, 0.0) ) {
-				System.out.println("PRIM  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
-			}
-			for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , kru , 0, 0.0) ) {
-				System.out.println("KRUSKAL  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
-			}
-			for (Grafo<String> grafo1 : kagm.obterKAGMS(grf, 10 , bor , 0, 0.0) ) {
-				System.out.println("BORUVKA  | "+ (grafo1.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo1.getVertices().size() +" \n");
-				grf=grafo1;
-			}*/
-			gutil.telaGrafos(grf).setVisible(true);
-			/*
-			grafo  = prim.obterAGM(grf,0,0.0);
-			System.out.println("\n"+file+"--------------------------------------------------");
-			System.out.println("Algoritmo | PesoTotal | TempoTotal | numVetices\n");
-			System.out.println("PRIM  | "+ (grafo.getPesoTotal()) + " | " + prim.getMetrica().getTempoTotal() + " | "+ grafo.getVertices().size() +" \n");
-			grafo  = kru.obterAGM(grf,0,0.0);
-			System.out.println("KRUSKAL | "+ (grafo.getPesoTotal()) + " | " + kru.getMetrica().getTempoTotal() + " | "+ grafo.getVertices().size() +" \n");
-			grafo  = bor.obterAGM(grf,0,0.0);
-			System.out.println("BORUVKA | "+ (grafo.getPesoTotal()) + "| " + bor.getMetrica().getTempoTotal() + " | "+ grafo.getVertices().size() +" \n");
-			*/
-		}
-			
-
-	}
 
 }
 

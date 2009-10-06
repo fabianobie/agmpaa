@@ -39,6 +39,12 @@ import br.uece.comp.paa.grafos.gui.JanelaGrafo;
  */
 public class GrafosUtil<T>{
 	
+	/**
+	 * @param name
+	 * @param bounds
+	 * @param raised
+	 * @return
+	 */
 	public  DefaultGraphCell createCell(T name, Rectangle2D bounds,
 			boolean raised) {
 		DefaultGraphCell cell = new DefaultGraphCell(name);
@@ -54,6 +60,10 @@ public class GrafosUtil<T>{
 		return cell;
 	}
 	
+	/**
+	 * @param G
+	 * @return
+	 */
 	public  JGraph desenhaGrafo(Grafo<T> G){
 		GraphModel model = new DefaultGraphModel();
 		GraphLayoutCache view = new GraphLayoutCache(model,new DefaultCellViewFactory());
@@ -118,6 +128,11 @@ public class GrafosUtil<T>{
 		return graph;
 	}
 	
+	/**
+	 * @param V
+	 * @param cells
+	 * @return
+	 */
 	private  int searchIdCell(Vertice<T> V, DefaultGraphCell[] cells){
 		for (int i=0 ; i< cells.length; i++) {
 			if(cells[i].toString().equals(V.getInfo())) return i;
@@ -125,6 +140,11 @@ public class GrafosUtil<T>{
 		return -1;
 	}
 	
+	/**
+	 * @param nameFile
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public  Grafo<T> fileToGrafo(String nameFile) throws FileNotFoundException{
 		Grafo<T> G =  new Grafo<T>();
 		File fgrafo = new File(nameFile);
@@ -171,6 +191,11 @@ public class GrafosUtil<T>{
 		return G;
 	}
 	
+	/**
+	 * @param V1
+	 * @param V2
+	 * @return
+	 */
 	public  Double distancia(Vertice<T> V1 ,Vertice<T> V2) {
 		
 		double x = Math.abs(V1.getPosX() - V2.getPosX());
@@ -183,6 +208,10 @@ public class GrafosUtil<T>{
 		return d;
 	}
 	
+	/**
+	 * @param arestas
+	 * @return
+	 */
 	public HeapFibonacci<Aresta<T>> arestaToHeap(ArrayList<Aresta<T>> arestas){
 		HeapFibonacci<Aresta<T>> heap = new HeapFibonacci<Aresta<T>>(); 
 			for (Aresta<T> aresta : arestas) {
@@ -191,6 +220,11 @@ public class GrafosUtil<T>{
 			return  heap;
 	}
 	
+	/**
+	 * @param k
+	 * @param arestas
+	 * @return
+	 */
 	public ArrayList<Aresta<T>> randomK(int k , ArrayList<Aresta<T>> arestas){
 		Random randomico = new Random();
 		HeapFibonacci<Aresta<T>> heap = arestaToHeap(arestas);
@@ -217,6 +251,10 @@ public class GrafosUtil<T>{
 		return result;
 	}
 	
+	/**
+	 * @param heap
+	 * @return
+	 */
 	public ArrayList<Aresta<T>> heapToAresta(HeapFibonacci<Aresta<T>> heap){
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		
@@ -228,6 +266,10 @@ public class GrafosUtil<T>{
 		return  arestas;
 	}
 	
+	/**
+	 * @param grafo
+	 * @return
+	 */
 	public JanelaGrafo telaGrafos(Grafo<T> grafo){
 		JanelaGrafo frame = new JanelaGrafo(desenhaGrafo(grafo));
 		frame.setTitle(grafo.getPesoTotal().toString());
@@ -235,13 +277,3 @@ public class GrafosUtil<T>{
 		return frame;
 	}
 }
-
-//JGraph graph = getGraph(); // Replace with your own graph instance
-//OutputStream out = getOutputStream(); // Replace with your output stream
-//Color bg = null; // Use this to make the background transparent
-//bg = graph.getBackground(); // Use this to use the graph background
-//color
-//BufferedImage img = graph.getImage(bg, inset);
-//ImageIO.write(img, ext, out);
-//out.flush();
-//out.close();

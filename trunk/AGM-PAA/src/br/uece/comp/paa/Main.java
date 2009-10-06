@@ -15,6 +15,10 @@ import br.uece.comp.paa.grafos.gui.AGMapp;
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
  */
+
+/**
+ * Programa Principal iicializa a Aplicação de Arvores Geradoras Minimas
+ */
 public class Main {
     /**
 	    * @param args the command line arguments
@@ -23,8 +27,12 @@ public class Main {
 	        java.awt.EventQueue.invokeLater(new Runnable() {
 	            public void run() {
 				try {
+					
+					//Escolhe como interface a do sitema local
 					UIManager.setLookAndFeel(UIManager
 							.getSystemLookAndFeelClassName());
+					
+					//inicializa a Janela principal da Aplicação
 					AGMapp janela = new AGMapp();
 					janela.setVisible(true);
 					janela.setMaximizar();
