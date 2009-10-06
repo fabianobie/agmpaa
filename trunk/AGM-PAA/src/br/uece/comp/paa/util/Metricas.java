@@ -7,6 +7,8 @@
  */
 package br.uece.comp.paa.util;
 
+import java.text.SimpleDateFormat;
+
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
  *
@@ -36,12 +38,20 @@ public class Metricas {
 		tempoFinal=System.currentTimeMillis();
 	}
 	
-	public double getTempoInicial() {
-		return tempoInicial;
+	public String getTempoInicial() {
+		return converte(tempoInicial);
 	}
 
-	public double getTempoFinal() {
-		return tempoFinal;
+	/**
+	 * @param tempoInicial2
+	 */
+	private String converte(double tempoInicial) {
+		   SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");  
+		   return sdf.format(tempoInicial);  
+	}
+
+	public String getTempoFinal() {
+		return converte(tempoFinal);
 	}
 
 	public int getNumIteracao() {

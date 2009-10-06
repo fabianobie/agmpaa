@@ -14,6 +14,7 @@ import br.uece.comp.paa.estruturas.HeapFibonacci;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.util.GrafosUtil;
+import br.uece.comp.paa.util.Metricas;
 
 /**
  * @author Fabiano Tavares (fabiano.bie@gmail.com)
@@ -22,6 +23,7 @@ import br.uece.comp.paa.util.GrafosUtil;
 public class KAgm<T> extends Agm<T> {
 	
 	private  Iagm<T> algoritmo =  new Kruskal<T>();
+	
 
 	/* (non-Javadoc)
 	 * @see br.uece.comp.paa.agm.interfaces.Iagm#obterAGM(br.uece.comp.paa.grafos.Grafo)
@@ -38,16 +40,17 @@ public class KAgm<T> extends Agm<T> {
 
 		Grafo<T> gtemp = grafo.clone();
 		Grafo<T> gmin;
-		
+		metrica.start();
 		gmin = algoritmo.obterAGM(gtemp,grauMax,dmax);
 		
 		grafos.inserir(gmin.getPesoTotal(), gmin.clone());
 		
 		if(K>1) backTrack(grafo, K, grafos, gtemp, gmin , algoritmo);
-
+		
 		while (!grafos.isVazio()) {
 			kagms.add(grafos.extrairMin().getInfo());
 		}
+		metrica.finish();
 
 		return kagms;
 	}
@@ -105,7 +108,17 @@ public class KAgm<T> extends Agm<T> {
 			gmin.addElem(arestaMax);
 		}
 		return;
-    } 
-	
+    }
+
+
+	public Iagm<T> getAlgoritmo() {
+		return algoritmo;
+	}
+
+
+	public void setAlgoritmo(Iagm<T> algoritmo) {
+		this.algoritmo = algoritmo;
+	}
+
 
 }

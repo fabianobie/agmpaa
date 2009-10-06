@@ -29,13 +29,15 @@ public class Genetico<T> extends Agm<T> {
 	private int alpha = 2;
 	private int populacaoInit = 4;
 	private boolean diversividade = false;
+	private StringBuffer log = new StringBuffer();
+
 
 	public Grafo<T> getInit(Grafo<T> grafo) {
 		ArrayList<Aresta<T>> arestas = grafo.getArestas();
 		Grafo<T> result = new Grafo<T>();
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		
-		arestas = gutil.randomK(arestas.size(), arestas);
+		arestas = gutil.randomK(arestas.size()/(alpha/2), arestas);
 	
 		for (Aresta<T> edg : arestas){
 			if (!result.findSet(edg.getA()).equals(result.findSet(edg.getB()))) {
@@ -49,6 +51,7 @@ public class Genetico<T> extends Agm<T> {
 
 		return result.clone();
 	}
+	
 	
 	
 	public void crossOver(Grafo<T>grafo ,Grafo<T> G1, Grafo<T> G2){
@@ -183,7 +186,7 @@ public class Genetico<T> extends Agm<T> {
 	 * @param pais
 	 * @return
 	 */
-	private HeapFibonacci<Grafo<T>> reproducao(Grafo<T> grafo, ArrayList<Grafo<T>> pais ,int K) {
+	private HeapFibonacci<Grafo<T>> reproducao(Grafo<T> grafo, ArrayList<Grafo<T>> pais) {
 		HeapFibonacci<Grafo<T>> newPopulacao = new HeapFibonacci<Grafo<T>>();
 		int tam = pais.size();
 		
@@ -238,7 +241,7 @@ public class Genetico<T> extends Agm<T> {
 		HeapFibonacci<Grafo<T>> populacaoGlobal = new HeapFibonacci<Grafo<T>>();
 		ArrayList<Grafo<T>> pais = new ArrayList<Grafo<T>>();
 		result = new Grafo<T>();
-		int    i = 1 , K = grafo.getNumVertice();
+		int    i = 1 ;
  		double tempInicio = 0;
         double tempFim = 0;
         tempInicio = System.currentTimeMillis();
@@ -246,15 +249,14 @@ public class Genetico<T> extends Agm<T> {
 		populacaoLocal = gerarPopulacao(grafo);
 
         do {
-			K-=alpha;
-			System.out.println(populacaoInit+"\t"+tempFim/1000 +"\t"+ K  +"\t"+ populacaoLocal.getMinNoh().getInfo().getPesoTotal());
+        	Grafo<T> grafoMin = populacaoLocal.getMinNoh().getInfo();
+			
+			log.append(populacaoInit+"\t"+i+"\t"+ grafoMin.getPesoTotal()+"\n");
 			
 			pais = selecao(populacaoLocal);
-			populacaoLocal = reproducao(grafo, pais, K);
+			populacaoLocal = reproducao(grafo, pais);
 			
-			populacaoGlobal.inserir(populacaoLocal.getMinNoh().getInfo()
-					.getPesoTotal(), populacaoLocal.getMinNoh().getInfo()
-					.clone());
+			populacaoGlobal.inserir(grafoMin.getPesoTotal() ,grafoMin.clone());
 			i++;
 			tempFim = System.currentTimeMillis();		
 			
@@ -293,6 +295,54 @@ public class Genetico<T> extends Agm<T> {
 	public int getPopulacao() {
 		return populacaoInit;
 	}
+
+
+	public double getTempo() {
+		return tempo;
+	}
+
+
+
+	public void setTempo(double tempo) {
+		this.tempo = tempo;
+	}
+
+
+
+	public int getAlpha() {
+		return alpha;
+	}
+
+
+
+	public void setAlpha(int alpha) {
+		this.alpha = alpha;
+	}
+
+
+
+	public int getPopulacaoInit() {
+		return populacaoInit;
+	}
+
+
+
+	public void setPopulacaoInit(int populacaoInit) {
+		this.populacaoInit = populacaoInit;
+	}
+
+
+
+	public StringBuffer getLog() {
+		return log;
+	}
+
+
+
+	public void setLog(StringBuffer log) {
+		this.log = log;
+	}
+
 
 
 	/*
