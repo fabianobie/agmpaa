@@ -6,6 +6,7 @@
 
 package br.uece.comp.paa.grafos.gui;
 
+import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 
 import org.jgraph.JGraph;
@@ -15,7 +16,7 @@ import org.jgraph.JGraph;
  *
  * @author  Fabiano Tavares 
  */
-public class JanelaGrafo extends javax.swing.JFrame {
+public class JanelaGrafo extends JInternalFrame {
 	
 	/**
 	 * 
@@ -58,7 +59,7 @@ public class JanelaGrafo extends javax.swing.JFrame {
           jPanel1 = new javax.swing.JPanel();
           jScrollPane1 = new javax.swing.JScrollPane(grafoGui);
 
-          setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+          setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
           jToolBar1.setRollover(true);
 

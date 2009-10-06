@@ -322,8 +322,6 @@ public class Grafo <T>{
 			int ib = getIdVertice(b);
 			Vertice<T> v2 = vertices.get(ib);
 			v2.getListAdj().remove(v2.getIdAresta(edg));
-			//if(v1.getListAdj().isEmpty()) vertices.remove(v1);
-			//if(v2.getListAdj().isEmpty()) vertices.remove(v2);
 			numAresta--;
 		}
 	}

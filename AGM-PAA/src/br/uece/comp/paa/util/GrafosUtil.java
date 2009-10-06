@@ -231,6 +231,7 @@ public class GrafosUtil<T>{
 	public JanelaGrafo telaGrafos(Grafo<T> grafo){
 		JanelaGrafo frame = new JanelaGrafo(desenhaGrafo(grafo));
 		frame.setTitle(grafo.getPesoTotal().toString());
+		frame.setVisible(true);
 		return frame;
 	}
 }
