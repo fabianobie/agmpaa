@@ -19,7 +19,7 @@ import br.uece.comp.paa.estruturas.HeapFibonacciNoh;
 import br.uece.comp.paa.grafos.Aresta;
 import br.uece.comp.paa.grafos.Grafo;
 import br.uece.comp.paa.grafos.Vertice;
-import br.uece.comp.paa.grafos.ui.GrafosUtil;
+import br.uece.comp.paa.util.GrafosUtil;
 
 public class Prim<T> extends Agm<T> {
 
@@ -39,11 +39,12 @@ public class Prim<T> extends Agm<T> {
 			Aresta<T> aresta = obterMinimo(result, grafo);
 			if (aresta == null)
 				break;
-			if (restricaoDeGrau(result, aresta)) {
-				if (restricaoDeDmax(result, aresta)) {
+			else
+			//if (restricaoDeGrau(result, aresta)) {
+				//if (restricaoDeDmax(result, aresta)) {
 					result.addElem(aresta.clone());
-				}
-			}
+				//}
+			//}
 		}
 
 		return result;
