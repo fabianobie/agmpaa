@@ -48,6 +48,7 @@ public class Grafo <T>{
 	public void makeSet(Vertice<T> V) {
 		V.setPai(V);
 	}
+	
 
 	public void union(Vertice<T> v1, Vertice<T> v2) {
 		Vertice<T> i = findSet(v1);
@@ -304,11 +305,7 @@ public class Grafo <T>{
 	}
 
 	public boolean doCiclo(Aresta<T> aresta) {
-		boolean a, b;
-		a = hasVertice(aresta.getA());
-		b = hasVertice(aresta.getB());
-
-		if ((a && b))
+		if(this.findSet(aresta.getA()).equals(this.findSet(aresta.getB())))
 			return true;
 		else
 			return false;
