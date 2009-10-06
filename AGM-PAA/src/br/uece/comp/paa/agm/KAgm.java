@@ -43,7 +43,7 @@ public class KAgm<T> extends Agm<T> {
 		
 		grafos.inserir(gmin.getPesoTotal(), gmin.clone());
 		
-		backTrack(grafo, K, grafos, gtemp, gmin , algoritmo);
+		if(K>1) backTrack(grafo, K, grafos, gtemp, gmin , algoritmo);
 
 		while (!grafos.isVazio()) {
 			kagms.add(grafos.extrairMin().getInfo());
