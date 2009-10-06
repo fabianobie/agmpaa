@@ -12,46 +12,36 @@ package br.uece.comp.paa.grafos;
  *
  */
 public class Aresta<T>{
-
+	//Vertices
 	private Vertice<T> A;
 	private Vertice<T> B;
+	
+	//peso
 	private Double peso;
 	
+	/**
+	 * Construtor
+	 * @param A
+	 * @param B
+	 * @param peso
+	 */
 	public Aresta(Vertice<T> A, Vertice<T> B, Double peso) {
 		this.A = A;
 		this.B = B;
 		this.peso = peso;
 	}
 
-	public Vertice<T> getA() {
-		return A;
-	}
-
-	public void setA(Vertice<T> a) {
-		A = a;
-	}
-
-	public Vertice<T> getB() {
-		return B;
-	}
-
-	public void setB(Vertice<T> b) {
-		B = b;
-	}
-
-	public double getPeso() {
-		return peso;
-	}
-
-	public void setPeso(double peso) {
-		this.peso = peso;
-	}
-
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "E [" + A.getInfo() + "-" + B.getInfo() + ":" + peso + "]";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override 
 	public boolean equals(Object obj) {
 		//if (obj instanceof Aresta)
@@ -65,6 +55,9 @@ public class Aresta<T>{
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
 	public Aresta<T> clone(){
 		Vertice<T> v1 =  A.clone();
 		Vertice<T> v2 =  B.clone();
@@ -72,6 +65,48 @@ public class Aresta<T>{
 		return cln;
 	}
 	
+	/**
+	 * @return
+	 */
+	public Vertice<T> getA() {
+		return A;
+	}
+
+	/**
+	 * @param a
+	 */
+	public void setA(Vertice<T> a) {
+		A = a;
+	}
+
+	/**
+	 * @return
+	 */
+	public Vertice<T> getB() {
+		return B;
+	}
+
+	/**
+	 * @param b
+	 */
+	public void setB(Vertice<T> b) {
+		B = b;
+	}
+
+	/**
+	 * @return
+	 */
+	public double getPeso() {
+		return peso;
+	}
+
+	/**
+	 * @param peso
+	 */
+	public void setPeso(double peso) {
+		this.peso = peso;
+	}
+
 	
 	
 }

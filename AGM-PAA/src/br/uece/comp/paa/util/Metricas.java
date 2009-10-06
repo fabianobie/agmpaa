@@ -50,10 +50,16 @@ public class Metricas {
 		   return sdf.format(tempoInicial);  
 	}
 
+	/**
+	 * @return
+	 */
 	public String getTempoFinal() {
 		return converte(tempoFinal);
 	}
 
+	/**
+	 * @return
+	 */
 	public int getNumIteracao() {
 		return numIteracao;
 	}

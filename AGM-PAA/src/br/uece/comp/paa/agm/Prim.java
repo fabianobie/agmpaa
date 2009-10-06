@@ -40,11 +40,7 @@ public class Prim<T> extends Agm<T> {
 			if (aresta == null)
 				break;
 			else
-			//if (restricaoDeGrau(result, aresta)) {
-				//if (restricaoDeDmax(result, aresta)) {
-					result.addElem(aresta.clone());
-				//}
-			//}
+				result.addElem(aresta.clone());
 		}
 
 		return result;
@@ -74,8 +70,7 @@ public class Prim<T> extends Agm<T> {
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
 			Aresta<T> aresta = nohHeap.getInfo();
 
-			if (!result.findSet(aresta.getA()).equals(
-					result.findSet(aresta.getB()))) {
+			if (!result.doCiclo(aresta)) {
 				if (aresta.getPeso() < minimo) {
 					if (restricaoDeGrau(result, aresta)) {
 						if (restricaoDeDmax(result, aresta)) {

@@ -54,6 +54,11 @@ public class HeapFibonacci<T> {
 		this.numNoh++;
 	}
 	
+
+	/**
+	 * Uma etapa necessaria para o inserir
+	 * @param noh
+	 */
 	private void colocar(HeapFibonacciNoh<T> noh) {
 		if (this.minNoh != null) {
 			// faz a ligação do novo elemento a lista de raizes
@@ -194,7 +199,7 @@ public class HeapFibonacci<T> {
 			if (nohAux != null){
 				if (this.minNoh != null){
 					//removemos o noh da lista
-					 // First remove node from root list.
+					 // remove o no raiz da Lista
 					nohAux.getEsquerdo().setDireito(nohAux.getDireito());
 					nohAux.getDireito().setEsquerdo(nohAux.getEsquerdo());
 					
@@ -388,27 +393,5 @@ public class HeapFibonacci<T> {
 
         return buf.toString();
     }
-
-    
-	/***
-	 * Teste Heap Fibonacci
-	 */
-	
-	   public static void main(String args[]){
-	        HeapFibonacci<Integer> heap = new HeapFibonacci<Integer>();
-	        Integer teste = 10;
-	        heap.inserir(10, teste);
-	        heap.inserir(10, teste);
-	        heap.inserir(10, teste);
-	        //heap.inserir(50, 50);
-	        //heap.inserir(25, 25);
-	        //heap.extrairMin();
-	        heap.extrairMin();
-	        
-	        System.out.println(heap);
-	    }
-
-
-	
 	
 }
