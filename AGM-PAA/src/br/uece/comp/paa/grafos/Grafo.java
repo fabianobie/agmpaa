@@ -161,8 +161,10 @@ public class Grafo <T>{
 		
 		for (Vertice<T> v1 : vertices) {
 			for (Vertice<T> vertice : grafo.getVertices()) {
-				if(v1.equals(vertice))
+				if(v1.equals(vertice)){
 					result.add(v1);
+					break;
+				}
 			}
 		}
 		return result;
