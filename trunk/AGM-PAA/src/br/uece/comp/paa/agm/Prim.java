@@ -63,8 +63,7 @@ public class Prim<T> extends Agm<T> {
 		Grafo<T> subgrafo = new Grafo<T>();
 		subgrafo.setVertices(vertices);
 
-		HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(subgrafo
-				.getArestas());
+		HeapFibonacci<Aresta<T>> arestas = gutil.arestaToHeap(subgrafo.getArestas());
 
 		while (!arestas.isVazio()) {
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();

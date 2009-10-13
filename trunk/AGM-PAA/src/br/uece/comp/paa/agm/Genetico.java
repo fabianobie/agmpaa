@@ -25,7 +25,7 @@ import br.uece.comp.paa.util.GrafosUtil;
  */
 public class Genetico<T> extends Agm<T> {
 
-	private double tempo=5000000;
+	private int geracoes = 10;
 	private int alpha = 2;
 	private int populacaoInit = 4;
 	private boolean diversividade = false;
@@ -43,11 +43,11 @@ public class Genetico<T> extends Agm<T> {
 		GrafosUtil<T> gutil = new GrafosUtil<T>();
 		
 		//randomiza valor inicial da população
-		arestas = gutil.randomK(arestas.size()/(alpha/2), arestas);
+		arestas = gutil.randomK(arestas.size()/alpha, arestas);
 	
 		//adiciona valores
 		for (Aresta<T> edg : arestas){
-			if (!result.findSet(edg.getA()).equals(result.findSet(edg.getB()))) {
+			if (!result.doCiclo(edg)){
 				if (restricaoDeGrau(result, edg)) {
 					if (restricaoDeDmax(result,edg)) {
 						result.addElem(edg.clone());
@@ -90,7 +90,7 @@ public class Genetico<T> extends Agm<T> {
 		//Arestas que sobraram
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		for (Aresta<T> aresta : grafo.getArestas()) {
-			if(!G.findSet(aresta.getA()).equals(G.findSet(aresta.getB()))){
+			if(!G.hasAresta(aresta)){
 				arestas.add(aresta.clone());
 			}
 		}
@@ -151,10 +151,10 @@ public class Genetico<T> extends Agm<T> {
 		ArrayList<Aresta<T>> arestas = new ArrayList<Aresta<T>>();
 		for (Aresta<T> aresta : grafo.getArestas()) {
 			if (!G.hasAresta(aresta)) {
-				if(restricaoDeGrau(G, aresta))
-					if(restricaoDeDmax(G, aresta)){
+				//if(restricaoDeGrau(G, aresta))
+				//	if(restricaoDeDmax(G, aresta)){
 						arestas.add(aresta.clone());
-					}
+				//	}
 			}
 		}
 		
@@ -164,9 +164,9 @@ public class Genetico<T> extends Agm<T> {
 			int index = Math.abs(randomico.nextInt() % arestas.size());
 			Aresta<T> edgAdd = arestas.get(index).clone();
 			//adiciona
-			G.addElem(edgAdd);
+				G.addElem(edgAdd);
 			//deleta do ciclo
-			G = deleteEdgCiclo(G,edgAdd);
+				G = deleteEdgCiclo(G,edgAdd);
 		}
 		return G;
 	}
@@ -194,7 +194,7 @@ public class Genetico<T> extends Agm<T> {
 			HeapFibonacciNoh<Aresta<T>> nohHeap = arestas.extrairMin();
 			Aresta<T> edg =  nohHeap.getInfo().clone();
 			
-			if(!result.findSet(edg.getA()).equals(result.findSet(edg.getB()))){
+			if(!result.doCiclo(edg)){
 				if(restricaoDeGrau(result, edg)){
 					if(restricaoDeDmax(result, edg)){
 							result.addElem(edg.clone());
@@ -217,9 +217,9 @@ public class Genetico<T> extends Agm<T> {
 	public HeapFibonacci<Grafo<T>> gerarPopulacao(Grafo<T> grafo) {
 		HeapFibonacci<Grafo<T>> grafos = new HeapFibonacci<Grafo<T>>();
         int i=0;
-       
+   
         //de acordo cm o parametro de pop inicial geramos a população
-        while (i < populacaoInit ){
+        while (i < populacaoInit-1 ){
         	Grafo<T>  grf = getInit(grafo);
 			grafos.inserir(grf.getPesoTotal(),grf);
 			i++;
@@ -308,7 +308,7 @@ public class Genetico<T> extends Agm<T> {
 		result = new Grafo<T>();
 		
 		//metricas de execução
-		int    i = 1 ;
+		int    i = 0 ;
  		double tempInicio = 0;
         double tempFim = 0;
         tempInicio = System.currentTimeMillis();
@@ -316,21 +316,22 @@ public class Genetico<T> extends Agm<T> {
         //Gerar população inical randomicamente
 		populacaoLocal = gerarPopulacao(grafo);
 
-        do {
+		while(i < geracoes){
         	//obtenho o minimo local
         	Grafo<T> grafoMin = populacaoLocal.getMinNoh().getInfo();
+        	//otimo global
+			populacaoGlobal.inserir(grafoMin.getPesoTotal() ,grafoMin.clone());
+			//log
 			log.append(populacaoInit+"\t"+i+"\t"+ grafoMin.getPesoTotal()+"\n");
 			// seleção
 			pais = selecao(populacaoLocal);
 			//reprodução
 			populacaoLocal = reproducao(grafo, pais);
-			//otimo global
-			populacaoGlobal.inserir(grafoMin.getPesoTotal() ,grafoMin.clone());
 			//calculamos o tempo das gerações
 			tempFim = System.currentTimeMillis();
 			//numero de gerações
 			i++;
-		} while(tempFim - tempInicio < tempo);
+		} 
         
         //extarimos o otimo global
         result = populacaoGlobal.extrairMin().getInfo();
@@ -367,24 +368,6 @@ public class Genetico<T> extends Agm<T> {
 	public int getPopulacao() {
 		return populacaoInit;
 	}
-
-
-	/**
-	 * @return
-	 */
-	public double getTempo() {
-		return tempo;
-	}
-
-
-
-	/**
-	 * @param tempo
-	 */
-	public void setTempo(double tempo) {
-		this.tempo = tempo;
-	}
-
 
 
 	/**
@@ -437,6 +420,24 @@ public class Genetico<T> extends Agm<T> {
 	 */
 	public void setLog(StringBuffer log) {
 		this.log = log;
+	}
+
+
+
+	/**
+	 * @param geracoes the geracoes to set
+	 */
+	public void setGeracoes(int geracoes) {
+		this.geracoes = geracoes;
+	}
+
+
+
+	/**
+	 * @return the geracoes
+	 */
+	public int getGeracoes() {
+		return geracoes;
 	}
 
 }
